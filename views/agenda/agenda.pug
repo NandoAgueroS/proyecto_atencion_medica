@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+
+    h2 Administracion de Agendas
+    table
+        thead
+            tr
+                th paciente
+                th fecha
+                th hora
+                th estado
+                th accion
+        tbody
+        each turno in turnos
+            tr
+                td #{turno.nombre_paciente}
+                td #{turno.fecha}
+                td #{turno.hora}
+                td #{turno.estado}
+                td 
+                    button ver
