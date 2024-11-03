@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+    h2 Consulta
+    div.border.m-5.p-4.bg-secondary
+        form(action="./cargar" method="POST")
+        div#evolucion
+            label.form-label Evolución
+            textarea.form-control.form-control-lg
+        div#diagnosticos
+            label.form-label Diagnosticos
+            textarea.form-control
+            each estado in estados_de_diagonosticos
+                label #{estado.descripcion}
+                input(type="checkbox" value=estado.id_estado)
+        div#alergias.d-flex
+            div
+                label.form-label Alergias
+                select#alergia.form-select.w-auto
+                    each alergia in alergias
+                        option(value=alergia.id_alergia) #{alergia.nomenclatura}
+                div.d-flex
+                    div.d-flex.flex-column.align-items-center
+                        label.form-label inicio
+                        input#alergia-inicio.form-control.w-auto(type="date")
+                    div.d-flex.flex-column.align-items-center
+                        label.form-label fin
+                        input#alergia-fin.form-control.w-auto(type="date")
+                    button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
+            div#alergias-seleccionadas.border.m-1.mx-3.px-2
+                p alergias seleccionadas
+        div#antecedentes
+            label.form-label Antecedentes
+            textarea.form-control
+        div#habitos
+            label.form-label Habitos
+            textarea.form-control
+        div#medicamentos
+            label.form-label Medicamentos
+            textarea.form-control
+    script(src="../../javascripts/script.js")

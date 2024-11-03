@@ -74,5 +74,20 @@ module.exports = {
             console.log(error);
             return [];
         }
+    },
+    getEstadosDeDiagnosticos: async () => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute('SELECT * FROM estados_de_diagnosticos');
+            connection.end();
+            if (result.length > 0) {
+                return result;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }

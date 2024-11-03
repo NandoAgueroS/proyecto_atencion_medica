@@ -1,10 +1,5 @@
 const mysql = require('mysql2/promise');
-const datosConexion = {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'atencion_medica_prueba'
-}
+const datosConexion = require('../conexionBD')
 
 module.exports = {
     get: async (matricula, fecha) => {

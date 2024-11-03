@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 const medicosRouter = require('./routes/medicos');
 const consultasRouter = require('./routes/consultas');
 const turnosRouter = require('./routes/turnos');
+const alergiasRouter = require('./routes/alergias');
 var app = express();
 
 // view engine setup
@@ -27,7 +28,7 @@ app.use('/users', usersRouter);
 app.use('/medicos', medicosRouter);
 app.use('/consultas', consultasRouter);
 app.use('/turnos', turnosRouter);
-
+app.use('/alergias', alergiasRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
