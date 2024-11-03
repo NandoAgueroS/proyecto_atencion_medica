@@ -2,21 +2,24 @@ extends ../layout
 
 block content
     h2 Consulta
-    div.border.m-5.p-4.bg-secondary
+    div.border.w-100.p-4.bg-secondary.rounded-1
         form(action="./cargar" method="POST")
         div#evolucion
             label.form-label Evolución
             textarea.form-control.form-control-lg
+        hr
         div#diagnosticos
             label.form-label Diagnosticos
             textarea.form-control
             each estado in estados_de_diagonosticos
                 label #{estado.descripcion}
                 input(type="checkbox" value=estado.id_estado)
+        hr
         div#alergias.d-flex
             div
                 label.form-label Alergias
                 select#alergia.form-select.w-auto
+                    option(value="" disabled selected) Seleccione una Alergia
                     each alergia in alergias
                         option(value=alergia.id_alergia) #{alergia.nomenclatura}
                 div.d-flex
@@ -27,15 +30,23 @@ block content
                         label.form-label fin
                         input#alergia-fin.form-control.w-auto(type="date")
                     button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
-            div#alergias-seleccionadas.border.m-1.mx-3.px-2
+            div#alergias-seleccionadas.border.m-1.mx-3.px-2.w-50
                 p alergias seleccionadas
+        hr
         div#antecedentes
-            label.form-label Antecedentes
-            textarea.form-control
+            div#antecedentes-container
+                label.form-label Antecedentes
+                //textarea.form-control.w-50.mb-3
+            button#nuevo_antecedente.btn.btn-primary(type="button") +
+        hr
         div#habitos
-            label.form-label Habitos
-            textarea.form-control
+            div#habitos-container
+                label.form-label Habitos
+            button#nuevo_habito.btn.btn-primary(type="button") +
+        hr
         div#medicamentos
-            label.form-label Medicamentos
-            textarea.form-control
+            div#medicamentos-container
+                label.form-label Medicamentos
+            button#nuevo_medicamento.btn.btn-primary(type="button") +
+        button(onclick="finalizarConsulta()") finalizar
     script(src="../../javascripts/script.js")
