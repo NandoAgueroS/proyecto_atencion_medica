@@ -6,22 +6,34 @@ block content
         form(action="./cargar" method="POST")
         div#evolucion
             label.form-label Evolución
-            textarea.form-control.form-control-lg
+            textarea#evolucion-text.form-control.form-control-lg
         hr
         div#diagnosticos
             label.form-label Diagnosticos
-            textarea.form-control
-            each estado in estados_de_diagonosticos
-                label #{estado.descripcion}
-                input(type="checkbox" value=estado.id_estado)
+            div#diagnosticos-container
+               <!-- div.diagnostico-info.d-flex.flex-row
+                    textarea.form-control
+                    div#estados-diagnosticos.form-check
+                        each estado in estados_de_diagnosticos
+                            div
+                                label.form-check-label(for="estado-diagnostico") #{estado.descripcion}
+                                input.form-check-input(type="radio" name="estado-diagnostico" id_estado=estado.id_estado)
+                    button#remover_antecedente.btn.btn-danger.h-25.m-3(type="button" onclick="removerAntecedente(this)") - -->
+            button#agregar-diagnostico.btn.btn-primary(type="button") +
         hr
         div#alergias.d-flex
-            div
+            div#carga_alergias
                 label.form-label Alergias
                 select#alergia.form-select.w-auto
                     option(value="" disabled selected) Seleccione una Alergia
                     each alergia in alergias
                         option(value=alergia.id_alergia) #{alergia.nomenclatura}
+                        
+                select#importancia.form-select.w-auto.mt-2
+                    option(value="" disabled selected) Seleccione una Importancia
+                    each importancia in importancias_de_alergias
+                        option(value=importancia.id_importancia) #{importancia.descripcion}
+
                 div.d-flex
                     div.d-flex.flex-column.align-items-center
                         label.form-label inicio
@@ -29,8 +41,8 @@ block content
                     div.d-flex.flex-column.align-items-center
                         label.form-label fin
                         input#alergia-fin.form-control.w-auto(type="date")
-                    button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
-            div#alergias-seleccionadas.border.m-1.mx-3.px-2.w-50
+                button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
+            div#alergias-seleccionadas.border.m-1.mx-3.px-2.w-50.rounded-3
                 p alergias seleccionadas
         hr
         div#antecedentes

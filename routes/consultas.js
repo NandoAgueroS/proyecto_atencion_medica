@@ -5,4 +5,5 @@ const consulta = require('../controllers/consulta');
 router.get('/iniciar/:id', consulta.iniciar);
 router.post('/cargar', consulta.cargar);
 router.get('/hce', consulta.historiaClinica);
+router.get('/estados_de_diagnosticos', consulta.estadosDeDiagnosticos);
 module.exports = router;

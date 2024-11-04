@@ -89,5 +89,20 @@ module.exports = {
             console.log(error);
             return [];
         }
+    },
+    getImportanciasDeAlergias: async () => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute('SELECT * FROM importancias_de_alergias');
+            connection.end();
+            if (result.length > 0) {
+                return result;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }
