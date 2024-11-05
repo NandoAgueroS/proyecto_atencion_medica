@@ -1,10 +1,5 @@
 const mysql = require('mysql2/promise');
-const datosConexion = {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'atencion_medica_prueba'
-}
+const datosConexion = require('../conexionBD');
 
 module.exports = {
     get: async (dni_paciente) => {
@@ -103,6 +98,33 @@ module.exports = {
         } catch (error) {
             console.log(error);
             return [];
+        }
+    },
+    crear: async (turno, paciente) => {
+        let idEvolucion = null;
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            let [result, fields] = await connection.execute(`
+                INSERT INTO evoluciones(descripcion) VALUES ("");
+                `);
+            [result] = await connection.execute(`SELECT LAST_INSERT_ID() AS id_evolucion;`)
+            idEvolucion = result[0].id_evolucion;
+            [result, fields] = await connection.execute(`
+                INSERT INTO consultas(id_estado_fk, id_evolucion_fk, id_turno_fk, dni_paciente_fk) VALUES (1, ?, ?, ?)`, [idEvolucion,turno,paciente]);
+            [result] = await connection.execute(`SELECT LAST_INSERT_ID() AS id_consulta;`)
+            idConsulta = result[0].id_consulta;
+
+                //intento de hacerlo con procedimiento almacenado
+            // const [result, fields] = await connection.execute('CALL INICIAR_CONSULTA(?, ?)', [turno, paciente]);
+            // console.log(fields);
+            connection.end();
+            return {
+                id_consulta: idConsulta,
+                id_evolucion: idEvolucion
+            };
+        } catch (error) {
+            console.log(error);
+            return {};
         }
     }
 }

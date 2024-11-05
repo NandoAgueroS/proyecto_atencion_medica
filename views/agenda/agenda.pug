@@ -1,10 +1,13 @@
 extends ../layout
-
+block head_adicional
+    link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css")
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
 block content
-
     h2 Administracion de Agendas
-    div
-        table.table.table-striped.table-hover
+        <!--table.table.table-striped.table-hover-->
+    div.bg-secondary.w-75.rounded-5.p-5
+        table#myTable.table.table-striped.table-hover.w-75
             thead
                 tr
                     th Paciente
@@ -13,11 +16,16 @@ block content
                     th Estado
                     th Accion
             tbody
-            each turno in turnos
-                tr
-                    td #{turno.nombre_paciente}
-                    td #{turno.fecha}
-                    td #{turno.hora}
-                    td #{turno.estado}
-                    td 
-                        a(href=`/consultas/iniciar/${turno.id_turno}` class="btn btn-primary") Iniciar Atención
+                each turno in turnos
+                    tr
+                        td #{turno.nombre_paciente}
+                        td #{turno.fecha}
+                        td #{turno.hora}
+                        td #{turno.estado}
+                        td 
+                            a(href=`/consultas/iniciar/${turno.id_turno}?dni=${turno.dni_paciente_fk}` class="btn btn-primary") Iniciar Atención
+    script.
+        let table = new DataTable('#myTable', {columnDefs: [{ className: 'border-bottom border-top border-primary', targets: "_all" }]})
+        const selectTable = document.getElementById("dt-length-0")
+        console.log(selectTable)
+        selectTable.classList.add('bg-secondary')

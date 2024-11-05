@@ -1,12 +1,12 @@
 extends ../layout
 
 block content
-    h2 Consulta
+    h2 Consulta #{iniciador.id_consulta} #{iniciador.id_evolucion}
     div.border.w-100.p-4.bg-secondary.rounded-1
         form(action="./cargar" method="POST")
         div#evolucion
             label.form-label Evolución
-            textarea#evolucion-text.form-control.form-control-lg
+            textarea#evolucion-text.form-control.form-control-lg(id_evolucion=iniciador.id_evolucion)
         hr
         div#diagnosticos
             label.form-label Diagnosticos

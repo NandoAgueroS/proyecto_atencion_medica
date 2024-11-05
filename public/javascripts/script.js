@@ -154,7 +154,9 @@ function finalizarConsulta(){
     const medicamentoHTML = medicamentosContainer.querySelectorAll('.medicamento-info');
     const medicamentos = recuperarTextAreaFechas(medicamentoHTML);
     
-    const evolucion = document.getElementById('evolucion-text').value;
+    const descEvolucion = document.getElementById('evolucion-text').value;
+    const idEvolucion = document.getElementById('evolucion-text').getAttribute('id_evolucion');
+    const evolucion = {descripcion: descEvolucion, id_evolucion: idEvolucion }
     console.log(evolucion);
     console.log(diagnosticos);
     console.log(alergias)
