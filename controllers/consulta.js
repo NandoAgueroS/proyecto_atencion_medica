@@ -81,7 +81,8 @@ exports.historiaClinica = async (req, res) => {
         })
     }
     console.log(await hce);
-    res.json(hce);
+    // res.json(hce);
+    res.render('consulta/hce', {consultas: hce});
 }
 
 exports.estadosDeDiagnosticos = async (req, res) => {
