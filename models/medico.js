@@ -39,5 +39,22 @@ module.exports = {
             console.log(error);
             return [];
         }
+    },
+    getEspecialidades: async (dniMedico) =>{
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute(
+                'SELECT e.*, me.matricula FROM especialidades e JOIN medicos_especialidades me ON e.id_especialidad = me.id_especialidad_fk WHERE me.dni_medico_fk = ? ', [dniMedico]);
+            connection.end();
+            if(result.length > 0){
+                return result;
+            }
+            else{
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }

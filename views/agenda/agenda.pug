@@ -6,8 +6,11 @@ block head_adicional
 block content
     h2 Administracion de Agendas
         <!--table.table.table-striped.table-hover-->
+    select#select-especialidad.form-select.w-auto.bg-secondary.text-light.mb-3
+        each especialidad in especialidades
+            option(value=especialidad.matricula selected=especialidad.selected) #{especialidad.descripcion} - #{especialidad.matricula}
     div.bg-secondary.w-75.rounded-5.p-5
-        table#myTable.table.table-striped.table-hover.w-75
+        table#myTable
             thead
                 tr
                     th Paciente
@@ -16,16 +19,36 @@ block content
                     th Estado
                     th Accion
             tbody
+                - let estadoClass = ""
                 each turno in turnos
                     tr
                         td #{turno.nombre_paciente}
                         td #{turno.fecha}
                         td #{turno.hora}
-                        td #{turno.estado}
-                        td 
-                            a(href=`/consultas/iniciar/${turno.id_turno}?dni=${turno.dni_paciente_fk}` class="btn btn-primary") Iniciar Atención
+                        case turno.id_estado_fk
+                            when 1
+                                - estadoClass="turno-pendiente"
+                            when 2
+                                - estadoClass="turno-presente"
+                            when 3
+                                - estadoClass="turno-atendido"
+                    
+                        if (turno.id_estado_fk === 3) 
+                            td(class= estadoClass) #{turno.estado}
+                            td
+                        else 
+                            td(class= estadoClass) #{turno.estado}
+                            td 
+                                a(href=`/consultas/iniciar/${turno.id_turno}?dni=${turno.dni_paciente_fk}` class="btn btn-primary btn-sm") Iniciar Atención
+                else
+                    td no hay turnos
+                    td
+                    td
+                    td
+                    td
     script.
-        let table = new DataTable('#myTable', {columnDefs: [{ className: 'border-bottom border-top border-primary', targets: "_all" }]})
+        let table = new DataTable('#myTable')
         const selectTable = document.getElementById("dt-length-0")
         console.log(selectTable)
         selectTable.classList.add('bg-secondary')
+    script(src="javascripts/agenda_script.js")

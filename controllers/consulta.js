@@ -11,10 +11,11 @@ exports.iniciar = async (req, res) => {
     const importanciasDeAlergias = await consulta.getImportanciasDeAlergias(); 
     const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
     const resultado = await consulta.crear(req.params.id, req.query.dni);
-
+    turno.setAtendido(idTurno);
     console.log(idTurno);
     res.render('consulta/cargar_consulta', 
     {
+        dni_paciente: req.query.dni,
         idTurno: idTurno, 
         alergias: alergias,
         estados_de_diagnosticos: estadosDeDiagonosticos,

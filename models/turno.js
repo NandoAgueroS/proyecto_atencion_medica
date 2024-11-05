@@ -53,7 +53,7 @@ module.exports = {
         try {
             const connection = await mysql.createConnection(datosConexion);
             const [result] = await connection.execute(
-                'UPDATE turnos SET id_estado_fk = 2 WHERE id_turno = ?',
+                'UPDATE turnos SET id_estado_fk = 3 WHERE id_turno = ?',
                 [id_turno]);
             connection.end();
             return result;

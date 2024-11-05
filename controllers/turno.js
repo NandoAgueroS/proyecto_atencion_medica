@@ -1,15 +1,24 @@
 const turno = require('../models/turno');
+const medico = require('../models/medico');
 
 exports.listar = async (req, res) => {
-    const matricula = req.query.matricula || "M12345";
     const fecha = req.query.fecha || "2024-11-15"
-    console.log(matricula, fecha);
+    const dniMedico = req.query.dni_medico || "12345678A";
+    const especialidades = await medico.getEspecialidades(dniMedico);
+    const matricula = req.query.matricula || especialidades[0].matricula;
+    especialidades.map(element => {
+        if (element.matricula === matricula) {
+            element.selected = '';
+        }
+    })
     const turnos = await turno.get(matricula, fecha);
+    console.log(matricula, fecha);
     turnos.forEach(turno => {
         turno.fecha = formatearFecha(turno.fecha);
     })
+    console.log(especialidades)
     // res.send(await turno.get(matricula, fecha));
-    res.render('agenda/agenda', {turnos: turnos});
+    res.render('agenda/agenda', {turnos: turnos, especialidades: especialidades});
 }
 
 function formatearFecha(fecha) {

@@ -2,6 +2,8 @@ extends ../layout
 
 block content
     h2 Consulta #{iniciador.id_consulta}
+    div
+        a.btn.btn-warning(href=`/consultas/hce?dni_paciente=${dni_paciente}`) Ver HCE
     div.border.w-100.p-4.bg-secondary.rounded-1
         form(action="./cargar" method="POST")
         div#evolucion

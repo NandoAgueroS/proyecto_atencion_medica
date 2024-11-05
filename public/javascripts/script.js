@@ -221,7 +221,8 @@ async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antec
         },
         body: JSON.stringify(datos)
     })
+    const matricula = localStorage.getItem('matricula');
     if (data.redirected){
-        window.location.href = data.url;
+        window.location.href = data.url+'?matricula='+matricula;
     }
 }
