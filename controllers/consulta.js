@@ -29,22 +29,34 @@ exports.cargar = async (req, res) => {
     if(consultaData.id_consulta){
         const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.evolucion.descripcion);
         if(consultaData.alergias){
-            const alergiaSaved = await alergia.save(consultaData.alergias[0].id_alergia, consultaData.alergias[0].id_importancia, consultaData.alergias[0].fecha_desde, consultaData.alergias[0].fecha_hasta, consultaData.id_consulta);
+            // const alergiaSaved = 
+            consultaData.alergias.forEach(async element => {
+                await alergia.save(element.id_alergia, element.id_importancia, element.fecha_desde, element.fecha_hasta, consultaData.id_consulta);
+            });
         }
         if(consultaData.diagnosticos){
-            const diagnosticoSaved = await diagnostico.save(consultaData.diagnosticos[0].descripcion,consultaData.diagnosticos[0].id_estado, consultaData.id_consulta);
+            consultaData.diagnosticos.forEach(async element => {
+                await diagnostico.save(element.descripcion,element.id_estado, consultaData.id_consulta);
+            })
         }
         if(consultaData.habitos){
-            const habitoSaved = await habito.save(consultaData.habitos[0].descripcion, consultaData.habitos[0].fecha_desde, consultaData.habitos[0].fecha_hasta, consultaData.id_consulta);
+            consultaData.habitos.forEach(async element => {
+                await habito.save(element.descripcion, element.fecha_desde, element.fecha_hasta, consultaData.id_consulta);
+            })
         }
         if(consultaData.medicamentos){
-            const medicamentoSaved = await medicamento.save(consultaData.medicamentos[0].descripcion, consultaData.id_consulta);
+            consultaData.medicamentos.forEach(async element => {
+                await medicamento.save(element.descripcion, consultaData.id_consulta);
+            })
         }
         if(consultaData.antecedentes){
-            const antecedenteSaved = await antecedente.save(consultaData.antecedentes[0].descripcion, consultaData.antecedentes[0].fecha_desde, consultaData.antecedentes[0].fecha_hasta, consultaData.id_consulta);
+            consultaData.antecedentes.forEach(async element => {
+                await antecedente.save(element.descripcion, element.fecha_desde, element.fecha_hasta, consultaData.id_consulta);
+            })
         }
     }
-    res.status(200).end();
+    // res.status(200).end();
+    res.redirect('/turnos');
 }
 exports.historiaClinica = async (req, res) => {
     const dni = req.query.dni_paciente || "98765432A";

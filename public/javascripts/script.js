@@ -150,6 +150,7 @@ function finalizarConsulta(idConsulta) {
     const habitos = recuperarTextAreaFechas(habitoHTML);
     
     //obtener medicamentos
+    //CORREGIR, losmedicamentos no tienen fechas
     const medicamentosContainer = document.getElementById('medicamentos-container');
     const medicamentoHTML = medicamentosContainer.querySelectorAll('.medicamento-info');
     const medicamentos = recuperarTextAreaFechas(medicamentoHTML);
@@ -213,11 +214,14 @@ async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antec
         habitos: habitos,
         medicamentos: medicamentos
     }
-    const data = fetch('/consultas/cargar',{
+    const data = await fetch('/consultas/cargar',{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(datos)
     })
+    if (data.redirected){
+        window.location.href = data.url;
+    }
 }
