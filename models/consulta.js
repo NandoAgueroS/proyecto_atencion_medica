@@ -26,8 +26,7 @@ module.exports = {
                 c.id_consulta,
                 c.fecha,
                 c.motivo,
-                e.id_evolucion,
-                e.descripcion AS desc_evolucion,
+                c.evolucion,
 
                 d.id_diagnostico,
                 d.descripcion AS desc_diagnostico,
@@ -56,7 +55,6 @@ module.exports = {
                 LEFT JOIN habitos h ON c.id_consulta = h.id_consulta_fk
                 LEFT JOIN consultas_alergias al ON c.id_consulta = al.id_consulta_fk
                 LEFT JOIN medicamentos m ON c.id_consulta = m.id_consulta_fk
-                JOIN evoluciones e ON c.id_evolucion_fk = e.id_evolucion
                 WHERE dni_paciente_fk = ?`
                 ,[dni_paciente]);
             connection.end();
@@ -104,27 +102,32 @@ module.exports = {
         let idEvolucion = null;
         try {
             const connection = await mysql.createConnection(datosConexion);
-            let [result, fields] = await connection.execute(`
-                INSERT INTO evoluciones(descripcion) VALUES ("");
-                `);
-            [result] = await connection.execute(`SELECT LAST_INSERT_ID() AS id_evolucion;`)
-            idEvolucion = result[0].id_evolucion;
-            [result, fields] = await connection.execute(`
-                INSERT INTO consultas(id_estado_fk, id_evolucion_fk, id_turno_fk, dni_paciente_fk) VALUES (1, ?, ?, ?)`, [idEvolucion,turno,paciente]);
-            [result] = await connection.execute(`SELECT LAST_INSERT_ID() AS id_consulta;`)
-            idConsulta = result[0].id_consulta;
-
+            const [result, fields] = await connection.execute(`
+                INSERT INTO consultas(id_estado_fk, id_turno_fk, dni_paciente_fk) VALUES (1, ?, ?)`, [turno,paciente]);
+            const [ID] = await connection.execute(`SELECT LAST_INSERT_ID() AS id_consulta;`)
+            idConsulta = ID[0].id_consulta;
+            console.log("ID CONSULTA: "+idConsulta);
                 //intento de hacerlo con procedimiento almacenado
             // const [result, fields] = await connection.execute('CALL INICIAR_CONSULTA(?, ?)', [turno, paciente]);
             // console.log(fields);
             connection.end();
             return {
                 id_consulta: idConsulta,
-                id_evolucion: idEvolucion
             };
         } catch (error) {
             console.log(error);
             return {};
+        }
+    },
+    save: async (id_consulta, evolucion) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('UPDATE consultas SET evolucion = ?, id_estado_fk = 2 WHERE id_consulta = ?', [evolucion, id_consulta]);
+            connection.end();
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
         }
     }
 }

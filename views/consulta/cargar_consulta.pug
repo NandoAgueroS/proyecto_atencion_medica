@@ -1,12 +1,12 @@
 extends ../layout
 
 block content
-    h2 Consulta #{iniciador.id_consulta} #{iniciador.id_evolucion}
+    h2 Consulta #{iniciador.id_consulta}
     div.border.w-100.p-4.bg-secondary.rounded-1
         form(action="./cargar" method="POST")
         div#evolucion
             label.form-label Evolución
-            textarea#evolucion-text.form-control.form-control-lg(id_evolucion=iniciador.id_evolucion)
+            textarea#evolucion-text.form-control.form-control-lg
         hr
         div#diagnosticos
             label.form-label Diagnosticos
@@ -60,5 +60,5 @@ block content
             div#medicamentos-container
                 label.form-label Medicamentos
             button#nuevo_medicamento.btn.btn-primary(type="button") +
-        button(onclick="finalizarConsulta()") finalizar
+        button(onclick=`finalizarConsulta(${iniciador.id_consulta})`) finalizar
     script(src="../../javascripts/script.js")

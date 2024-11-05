@@ -30,5 +30,18 @@ module.exports = {
             console.log(error);
             return [];
         }
+    },
+    setAtendido: async (id_turno) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute(
+                'UPDATE turnos SET id_estado_fk = 2 WHERE id_turno = ?',
+                [id_turno]);
+            connection.end();
+            return result;
+        } catch (error) {
+            console.log(error);
+            return {};
+        }
     }
 }

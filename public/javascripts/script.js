@@ -124,7 +124,7 @@ async function fetchEstadosDiagnosticos(){
     const estados_diagnosticos = await data.json();
     return estados_diagnosticos;
 }
-function finalizarConsulta(){
+function finalizarConsulta(idConsulta) {
     // const evolucion = document.getElementById('evolucion');
     // const diagnosticos = document.getElementById('diagnosticos');
 
@@ -155,15 +155,15 @@ function finalizarConsulta(){
     const medicamentos = recuperarTextAreaFechas(medicamentoHTML);
     
     const descEvolucion = document.getElementById('evolucion-text').value;
-    const idEvolucion = document.getElementById('evolucion-text').getAttribute('id_evolucion');
-    const evolucion = {descripcion: descEvolucion, id_evolucion: idEvolucion }
+    const evolucion = {descripcion: descEvolucion }
+
     console.log(evolucion);
     console.log(diagnosticos);
     console.log(alergias)
     console.log(antecedentes);
     console.log(habitos);
     console.log(medicamentos);
-    postConsulta(evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
+    postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
 }
 function recuperarDiagnosticos(itemHTML) {
     const items = [];
@@ -203,8 +203,9 @@ function recuperarTextAreaFechas(itemHTML) {
     return items;
 }
 
-async function postConsulta(evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
+async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
     const datos = {
+        id_consulta: idConsulta,
         evolucion: evolucion,
         diagnosticos: diagnosticos,
         alergias: alergias,
