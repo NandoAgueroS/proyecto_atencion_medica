@@ -31,6 +31,24 @@ module.exports = {
             return [];
         }
     },
+    findById: async (id) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute(
+                'SELECT * FROM turnos WHERE id_turno = ?',
+                [id]);
+            connection.end();
+            if(result.length = 1){
+                return result[0];
+            }
+            else{
+                return {};
+            }
+        } catch (error) {
+            console.log(error);
+            return {};
+        }
+    },
     setAtendido: async (id_turno) => {
         try {
             const connection = await mysql.createConnection(datosConexion);

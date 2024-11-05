@@ -12,5 +12,20 @@ module.exports = {
             console.log(error);
             return {};
         }
+    },
+    findByConsulta: async (consulta) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute('SELECT * FROM habitos WHERE id_consulta_fk = ?', [consulta]);
+            connection.end();
+            if (result.length > 0) {
+                return result;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }

@@ -27,5 +27,20 @@ module.exports = {
             console.log(error);
             return false;
         }
+    },
+    findByConsulta: async (consulta) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute('SELECT * FROM consultas_alergias WHERE id_consulta_fk = ?', [consulta]);
+            connection.end();
+            if (result.length > 0) {
+                return result;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }

@@ -2,10 +2,10 @@ const mysql = require('mysql2/promise');
 const datosConexion = require('../conexionBD');
 
 module.exports = {
-    get: async (dni_paciente) => {
+    findByPaciente: async (dniPaciente) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result, fields] = await connection.execute('SELECT * FROM consultas WHERE dni_paciente_fk = ?',[dni_paciente]);
+            const [result, fields] = await connection.execute('SELECT * FROM consultas WHERE dni_paciente_fk = ?',[dniPaciente]);
             connection.end();
             if (result.length > 0) {
                 return result;
