@@ -155,7 +155,16 @@ function finalizarConsulta(idConsulta) {
     const medicamentoHTML = medicamentosContainer.querySelectorAll('.medicamento-info');
     const medicamentos = recuperarTextAreaFechas(medicamentoHTML);
     
-    const descEvolucion = document.getElementById('evolucion-text').value;
+    const evolucionContainer = document.getElementById('evolucion-text');
+    const evolucionHTML = evolucionContainer.querySelector('[class="ql-editor"]').children;
+    console.log(evolucionHTML);
+    let descEvolucion = '';
+    // evolucionHTML.forEach(element => {
+    //     descEvolucion += element.outerHTML;
+    // })
+    for (const element of evolucionHTML) {
+        descEvolucion += element.outerHTML;
+    }
     const evolucion = {descripcion: descEvolucion }
 
     console.log(evolucion);

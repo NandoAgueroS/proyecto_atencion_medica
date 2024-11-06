@@ -20,7 +20,8 @@ exports.iniciar = async (req, res) => {
         alergias: alergias,
         estados_de_diagnosticos: estadosDeDiagonosticos,
         importancias_de_alergias: importanciasDeAlergias,
-        iniciador: resultado
+        iniciador: resultado,
+        consultas: await traerHistoriaClinica(req.query.dni_paciente_fk)
     });
 }
 exports.cargar = async (req, res) => {
@@ -65,6 +66,7 @@ exports.historiaClinica = async (req, res) => {
     // res.send(await consulta.getHistoriaClinica(dni));
     const hce = [];
     const consultasDelPaciente = await consulta.findByPaciente(dni);
+    // consultasDelPaciente.reverse();
     // console.log(consultasDelPaciente);
     for await (const element of consultasDelPaciente){
         console.log(element);
@@ -89,6 +91,39 @@ exports.historiaClinica = async (req, res) => {
     console.log(await hce);
     // res.json(hce);
     res.render('consulta/hce', {consultas: hce});
+}
+const traerHistoriaClinica = async (dni_paciente) => {
+    const dni = dni_paciente || "98765432A";
+    console.log(dni);
+    // res.send(await consulta.getHistoriaClinica(dni));
+    const hce = [];
+    const consultasDelPaciente = await consulta.findByPaciente(dni);
+    // consultasDelPaciente.reverse();
+    // console.log(consultasDelPaciente);
+    for await (const element of consultasDelPaciente){
+        console.log(element);
+        try {
+            element.fecha = formatearFechaYHora(element.fecha);
+        } catch (error) {
+            console.log(error);
+        }
+        hce.push({
+            id_consulta: element.id_consulta,
+            fecha_consulta: element.fecha,
+            evolucion: element.evolucion,
+            motivo: element.motivo,
+            turno: await turno.findById(element.id_turno_fk),
+            diagnosticos: await diagnostico.findByConsulta(element.id_consulta),
+            alergias: await alergia.findByConsulta(element.id_consulta),
+            antecedentes: await antecedente.findByConsulta(element.id_consulta),
+            habitos: await habito.findByConsulta(element.id_consulta),
+            medicamentos: await medicamento.findByConsulta(element.id_consulta)
+        })
+    }
+    console.log(await hce);
+    // res.json(hce);
+    // res.render('consulta/hce', {consultas: hce});
+    return hce;
 }
 
 exports.estadosDeDiagnosticos = async (req, res) => {
