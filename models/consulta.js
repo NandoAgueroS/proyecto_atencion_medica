@@ -119,10 +119,10 @@ module.exports = {
             return {};
         }
     },
-    save: async (id_consulta, evolucion) => {
+    save: async (id_consulta, motivo,evolucion) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('UPDATE consultas SET evolucion = ?, id_estado_fk = 2 WHERE id_consulta = ?', [evolucion, id_consulta]);
+            const [result] = await connection.execute('UPDATE consultas SET motivo = ?,evolucion = ?, id_estado_fk = 2 WHERE id_consulta = ?', [motivo, evolucion, id_consulta]);
             connection.end();
             return true;
         } catch (error) {

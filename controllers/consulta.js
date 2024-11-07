@@ -10,18 +10,18 @@ exports.iniciar = async (req, res) => {
     const alergias = await alergia.get();
     const importanciasDeAlergias = await consulta.getImportanciasDeAlergias(); 
     const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
-    const resultado = await consulta.crear(req.params.id, req.query.dni);
+    const resultado = await consulta.crear(req.params.id, req.query.dni_paciente);
     turno.setAtendido(idTurno);
     console.log(idTurno);
     res.render('consulta/cargar_consulta', 
     {
-        dni_paciente: req.query.dni,
+        dni_paciente: req.query.dni_paciente,
         idTurno: idTurno, 
         alergias: alergias,
         estados_de_diagnosticos: estadosDeDiagonosticos,
         importancias_de_alergias: importanciasDeAlergias,
         iniciador: resultado,
-        consultas: await traerHistoriaClinica(req.query.dni_paciente_fk)
+        consultas: await traerHistoriaClinica(req.query.dni_paciente)
     });
 }
 exports.cargar = async (req, res) => {
@@ -29,7 +29,7 @@ exports.cargar = async (req, res) => {
     console.log(consultaData);
     // await turno.setAtendido(consultaData.id_turno);
     if(consultaData.id_consulta){
-        const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.evolucion.descripcion);
+        const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.motivo, consultaData.evolucion.descripcion);
         if(consultaData.alergias){
             // const alergiaSaved = 
             consultaData.alergias.forEach(async element => {

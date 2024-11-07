@@ -127,6 +127,7 @@ async function fetchEstadosDiagnosticos(){
 function finalizarConsulta(idConsulta) {
     // const evolucion = document.getElementById('evolucion');
     // const diagnosticos = document.getElementById('diagnosticos');
+    const motivo = document.getElementById('motivo-text').value;
 
     const diagnosticosContainer = document.getElementById('diagnosticos-container');
     const diagnosticosHTML = diagnosticosContainer.querySelectorAll('.diagnostico-info');
@@ -173,7 +174,7 @@ function finalizarConsulta(idConsulta) {
     console.log(antecedentes);
     console.log(habitos);
     console.log(medicamentos);
-    postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
+    postConsulta(idConsulta, motivo, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
 }
 function recuperarDiagnosticos(itemHTML) {
     const items = [];
@@ -213,9 +214,10 @@ function recuperarTextAreaFechas(itemHTML) {
     return items;
 }
 
-async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
+async function postConsulta(idConsulta,motivo, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
     const datos = {
         id_consulta: idConsulta,
+        motivo: motivo,
         evolucion: evolucion,
         diagnosticos: diagnosticos,
         alergias: alergias,

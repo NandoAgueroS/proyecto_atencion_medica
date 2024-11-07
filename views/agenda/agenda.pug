@@ -39,7 +39,7 @@ block content
                         else 
                             td(class= estadoClass) #{turno.estado}
                             td 
-                                a(href=`/consultas/iniciar/${turno.id_turno}?dni=${turno.dni_paciente_fk}` class="btn btn-primary btn-sm") Iniciar Atención
+                                a(href=`/consultas/iniciar/${turno.id_turno}?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-primary btn-sm") Iniciar Atención
                 else
                     td no hay turnos
                     td
