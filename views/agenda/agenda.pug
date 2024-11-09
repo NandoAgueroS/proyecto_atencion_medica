@@ -4,7 +4,9 @@ block head_adicional
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
     script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
 block content
-    h2 Administracion de Agendas
+    h2 Bienvenido #{medico.nombre}
+    h3 Administracion de Agendas
+    a.btn.btn-danger(href="/login/logout") Cerrar sessión
         <!--table.table.table-striped.table-hover-->
     select#select-especialidad.form-select.w-auto.bg-secondary.text-light.mb-3
         each especialidad in especialidades

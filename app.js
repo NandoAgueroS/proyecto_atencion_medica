@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -10,6 +11,10 @@ const medicosRouter = require('./routes/medicos');
 const consultasRouter = require('./routes/consultas');
 const turnosRouter = require('./routes/turnos');
 const alergiasRouter = require('./routes/alergias');
+const loginRouter = require('./routes/login');
+
+const autenticacion = require('./middlewares/autenticacion')
+
 var app = express();
 
 // view engine setup
@@ -22,13 +27,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(
+  session(
+      {
+          secret: 'palabra secreta',
+          resave: false,
+          saveUninitialized: true
+      }
+  )
+)
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use('/medicos', medicosRouter);
+app.use('/medicos', autenticacion.isAuthenticated ,medicosRouter);
 app.use('/consultas', consultasRouter);
-app.use('/turnos', turnosRouter);
+app.use('/turnos', autenticacion.isAuthenticated, turnosRouter);
 app.use('/alergias', alergiasRouter);
+app.use('/login', loginRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
