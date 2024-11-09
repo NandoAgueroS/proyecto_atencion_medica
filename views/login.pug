@@ -1,0 +1,17 @@
+extends layout
+block head_adicional
+    link(rel="stylesheet" href="/stylesheets/login.css")
+block content
+    h1
+        = title
+    div#login.border.w-25.p-3
+        h3 Inicie sesion
+        form.w-100.d-flex.flex-column.align-items-center
+            div.d-flex.flex-column.w-100.mb-3.mt-3
+                label Correo
+                input(type="mail" name="correo" id="correo" required)
+            div.d-flex.flex-column.w-100.mb-3
+                label Contraseña
+                input(type="password" name="contrasenia" id="contrasenia" required)
+            button.btn.btn-light.mt-3(type="submit") Ingresar
+        

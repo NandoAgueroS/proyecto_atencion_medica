@@ -1,0 +1,12 @@
+body{
+    background-image: url('/images/login-background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+#login{
+    backdrop-filter: blur(5px);
+}
+form{
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+}
