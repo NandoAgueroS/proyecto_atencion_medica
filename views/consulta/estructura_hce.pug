@@ -1,0 +1,69 @@
+div.h-100.w-100.m-5.d-flex.flex-column.align-items-center
+        h2.m-3.bg-light.text-dark.w-auto.text-center Historia clinica del paciente
+        each consulta in consultas
+            div.d-flex.flex-column.w-100.align-items-center
+                button.btn.w-75.pt-4.pb-4.m-3.fs-3(class= (medico.dni == consulta.medico.dni) ? "btn-success" : "btn-warning" type="button" data-toggle="collapse" data-target=`#collapse${consulta.id_consulta}` aria-expanded="false" aria-controls=`collapse${consulta.id_consulta}`) Consulta del #{consulta.fecha_consulta} <br> #{consulta.motivo}
+                div.border.w-75.p-3.m-3.collapse(id=`collapse${consulta.id_consulta}`)
+                    h3.text-center Atendido por: #{consulta.medico.nombre} #{consulta.medico.apellido} #{consulta.medico.dni} 
+                    h3 medico actual: #{medico.dni}
+                    h3.text-center Fecha: #{consulta.fecha_consulta}
+                    hr
+                    h3.text-center Motivo #{consulta.motivo}
+                    hr
+                    div
+                        h3.text-center diagnosticos
+                        each diagnostico in consulta.diagnosticos
+                            p #{diagnostico.descripcion}
+                            p Estado: #{diagnostico.id_estado_fk}
+                        else
+                            p no se registraron diagnosticos
+                    hr
+                    if consulta.medico.dni == medico.dni
+                        h3.text-center Evolucion 
+                        p #{consulta.evolucion}
+                        hr
+                        if consulta.alergias.length > 0
+                            div
+                                h3.text-center Alergias
+                                table.table.w-auto
+                                    tr
+                                        th Nomenclatura
+                                        th Importancia
+                                        th Inicio
+                                        th Fin
+                                    each alergia in consulta.alergias
+                                        tr
+                                            td #{alergia.id_alergia_fk} 
+                                            td #{alergia.id_importancia_fk}
+                                            td #{alergia.fecha_desde} 
+                                            td #{alergia.fecha_hasta}
+                                    else
+                                        p no se registraron alergias
+                            hr
+                        if consulta.antecedentes.length > 0
+                            div
+                                h3.text-center Antecedentes
+                                each antecedente in consulta.antecedentes
+                                    p descripcion: #{antecedente.descripcion}
+                                    p duración: Desde: #{antecedente.fecha_desde} Hasta #{antecedente.fecha_hasta}
+                                else 
+                                    p no se registraron antecedentes
+                            hr
+                        if consulta.habitos.length > 0
+                            div
+                                h3.text-center Habitos
+                                each habito in consulta.habitos
+                                    div
+                                        p descripcion: #{habito.descripcion}
+                                        p duracion: Desde: #{habito.fecha_desde} Hasta: #{habito.fecha_hasta}
+                                else
+                                    p no se registraron habitos
+                            hr
+                        if consulta.medicamentos.length > 0
+                            div
+                                h3.text-center Medicamentos
+                                each medicamento in consulta.medicamentos
+                                    div
+                                        p descripcion: #{medicamento.descripcion}
+                                else
+                                    p no se registraron medicamentos

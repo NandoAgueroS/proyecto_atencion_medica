@@ -5,6 +5,7 @@ const habito = require('../models/habito');
 const medicamento = require('../models/medicamento');
 const antecedente = require('../models/antecedente');
 const turno = require('../models/turno');
+const medico = require('../models/medico');
 exports.iniciar = async (req, res) => {
     const idTurno = req.params.id;
     const alergias = await alergia.get();
@@ -12,7 +13,7 @@ exports.iniciar = async (req, res) => {
     const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
     const resultado = await consulta.crear(req.params.id, req.query.dni_paciente);
     turno.setAtendido(idTurno);
-    console.log(idTurno);
+    console.log(req.session);
     res.render('consulta/cargar_consulta', 
     {
         dni_paciente: req.query.dni_paciente,
@@ -21,7 +22,8 @@ exports.iniciar = async (req, res) => {
         estados_de_diagnosticos: estadosDeDiagonosticos,
         importancias_de_alergias: importanciasDeAlergias,
         iniciador: resultado,
-        consultas: await traerHistoriaClinica(req.query.dni_paciente)
+        consultas: await traerHistoriaClinica(req.query.dni_paciente),
+        medico: {dni: req.session.dni}
     });
 }
 exports.cargar = async (req, res) => {
@@ -85,12 +87,13 @@ exports.historiaClinica = async (req, res) => {
             alergias: await alergia.findByConsulta(element.id_consulta),
             antecedentes: await antecedente.findByConsulta(element.id_consulta),
             habitos: await habito.findByConsulta(element.id_consulta),
-            medicamentos: await medicamento.findByConsulta(element.id_consulta)
+            medicamentos: await medicamento.findByConsulta(element.id_consulta),
+            medico: await medico.findByIdTurno(element.id_turno_fk)
         })
     }
     console.log(await hce);
     // res.json(hce);
-    res.render('consulta/hce', {consultas: hce});
+    res.render('consulta/hce', {consultas: hce, medico: {dni: req.session.dni}});
 }
 const traerHistoriaClinica = async (dni_paciente) => {
     const dni = dni_paciente || "98765432A";
@@ -117,7 +120,8 @@ const traerHistoriaClinica = async (dni_paciente) => {
             alergias: await alergia.findByConsulta(element.id_consulta),
             antecedentes: await antecedente.findByConsulta(element.id_consulta),
             habitos: await habito.findByConsulta(element.id_consulta),
-            medicamentos: await medicamento.findByConsulta(element.id_consulta)
+            medicamentos: await medicamento.findByConsulta(element.id_consulta),
+            medico: await medico.findByIdTurno(element.id_turno_fk)
         })
     }
     console.log(await hce);

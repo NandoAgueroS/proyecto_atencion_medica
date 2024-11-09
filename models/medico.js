@@ -23,6 +23,30 @@ module.exports = {
             return [];
         }
     },
+    findByIdTurno: async (idTurno) =>{
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute(`
+                SELECT m.* 
+                FROM medicos m
+                JOIN medicos_especialidades e ON m.dni = e.dni_medico_fk
+                JOIN agendas a ON e.matricula = a.matricula_fk
+                JOIN turnos t ON a.id_agenda = t.id_agenda_fk
+                WHERE t.id_turno = ?
+                `, [idTurno]);
+            connection.end();
+            if(result.length > 0){
+                return result[0];
+            }
+            else{
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+    ,
     get: async () =>{
         try {
             const connection = await mysql.createConnection(datosConexion);
