@@ -15,6 +15,14 @@ block content
             textarea#motivo-text.form-control.w-50
         hr
         div#evolucion.bg-light.h-25.text-dark
+            ul
+                each plantilla in medico.plantillas
+                    li
+                        button(type="button" onclick="cargarPlantilla(this)")
+                            =plantilla.nombre
+                        p
+                            =plantilla.descripcion
+                        input(type="hidden" value=plantilla.plantilla)
             //label.form-label Evolución
             //textarea#evolucion-text.form-control.form-control-lg
             div#evolucion-text

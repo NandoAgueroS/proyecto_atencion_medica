@@ -6,6 +6,7 @@ const medicamento = require('../models/medicamento');
 const antecedente = require('../models/antecedente');
 const turno = require('../models/turno');
 const medico = require('../models/medico');
+const plantilla = require('../models/plantilla');
 exports.iniciar = async (req, res) => {
     const idTurno = req.params.id;
     const alergias = await alergia.get();
@@ -23,7 +24,7 @@ exports.iniciar = async (req, res) => {
         importancias_de_alergias: importanciasDeAlergias,
         iniciador: resultado,
         consultas: await traerHistoriaClinica(req.query.dni_paciente),
-        medico: {dni: req.session.dni}
+        medico: {dni: req.session.dni, plantillas: await plantilla.findByMedico(req.session.dni)}
     });
 }
 exports.cargar = async (req, res) => {

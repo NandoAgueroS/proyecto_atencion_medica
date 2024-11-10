@@ -1,3 +1,11 @@
+function cargarPlantilla(elemento){
+    const plantilla = elemento.parentElement.querySelector('input[type="hidden"]').value;
+    const evolucionContainer = document.getElementById('evolucion-text');
+    const evolucionHTML = evolucionContainer.querySelector('div[contenteditable="true"]');
+    console.log(evolucionHTML, plantilla);
+    evolucionHTML.innerHTML = plantilla;
+}
+
 function agregarAlergia() {
     const alergia = document.getElementById('alergia');
     const alergiasSeleccionadas = document.getElementById('alergias-seleccionadas');
