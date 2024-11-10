@@ -89,7 +89,7 @@ document.getElementById('nuevo_medicamento').addEventListener('click', function(
 function removerItem(element) {
     element.parentElement.remove();
 }
-let nroDiagnostico = 0;
+let numeroDiagnostico = 0;
 document.getElementById('agregar-diagnostico').addEventListener('click', agregarDiagnostico);
     async function agregarDiagnostico() {
     const diagnosticos = document.getElementById('diagnosticos-container');
@@ -99,19 +99,19 @@ document.getElementById('agregar-diagnostico').addEventListener('click', agregar
     textArea.className = 'form-control';
     const estadosDiv = document.createElement('div')
     estadosDiv.className = 'form-check';
-    nroDiagnostico++;
+    numeroDiagnostico++;
     estadosDiagnosticos = await fetchEstadosDiagnosticos();
     console.log(estadosDiagnosticos);
     estadosDiagnosticos.forEach(element => {
         const input = document.createElement('input');
         input.setAttribute('type', 'radio');
-        input.setAttribute('id', element.id_estado+""+nroDiagnostico)
+        input.setAttribute('id', element.id_estado+""+numeroDiagnostico)
         input.setAttribute('value', element.id_estado)
-        input.setAttribute('name', "estado-diagnostico-radio"+nroDiagnostico)
+        input.setAttribute('name', "estado-diagnostico-radio"+numeroDiagnostico)
         input.className = 'form-check-input';
         const label = document.createElement('label')
         label.innerHTML = element.descripcion;
-        label.setAttribute("for", element.id_estado+""+nroDiagnostico)
+        label.setAttribute("for", element.id_estado+""+numeroDiagnostico)
         label.className = 'form-check-label';
         estadosDiv.append(label, input);
     });
@@ -133,9 +133,6 @@ async function fetchEstadosDiagnosticos(){
     return estados_diagnosticos;
 }
 function finalizarConsulta(idConsulta) {
-    // const evolucion = document.getElementById('evolucion');
-    // const diagnosticos = document.getElementById('diagnosticos');
-    const motivo = document.getElementById('motivo-text').value;
 
     const diagnosticosContainer = document.getElementById('diagnosticos-container');
     const diagnosticosHTML = diagnosticosContainer.querySelectorAll('.diagnostico-info');
@@ -182,7 +179,7 @@ function finalizarConsulta(idConsulta) {
     console.log(antecedentes);
     console.log(habitos);
     console.log(medicamentos);
-    postConsulta(idConsulta, motivo, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
+    postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos);
 }
 function recuperarDiagnosticos(itemHTML) {
     const items = [];
@@ -222,10 +219,9 @@ function recuperarTextAreaFechas(itemHTML) {
     return items;
 }
 
-async function postConsulta(idConsulta,motivo, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
+async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
     const datos = {
         id_consulta: idConsulta,
-        motivo: motivo,
         evolucion: evolucion,
         diagnosticos: diagnosticos,
         alergias: alergias,

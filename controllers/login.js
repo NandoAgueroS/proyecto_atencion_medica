@@ -13,10 +13,10 @@ exports.autenticar = async (req, res) => {
             req.session.nombre = user.nombre;
             res.redirect('/turnos');
         } else {
-        res.status(400).end();
+        res.status(401).end();
        }
     } else {
-        res.status(401).end();
+        res.status(404).end();
     }
 }
 exports.logout = (req, res) => {

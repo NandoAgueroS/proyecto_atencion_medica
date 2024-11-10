@@ -6,12 +6,14 @@ block content
         = title
     div#login.border.w-25.p-3
         h3 Inicie sesion
-        form.w-100.d-flex.flex-column.align-items-center(action="/login/autenticar" method="POST")
+        form.w-100.d-flex.flex-column.align-items-center(action="")
             div.d-flex.flex-column.w-100.mb-3.mt-3
                 label Correo
                 input(type="mail" name="correo" id="correo" required)
             div.d-flex.flex-column.w-100.mb-3
                 label Contraseña
                 input(type="password" name="contrasenia" id="contrasenia" required)
-            button.btn.btn-light.mt-3(type="submit") Ingresar
+            div#login-errores.text-danger
+            button.btn.btn-light.mt-3(type="button" onclick="autenticarUsuario()") Ingresar
+    script(src="/javascripts/login_script.js")
         

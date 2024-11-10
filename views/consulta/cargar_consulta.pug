@@ -10,10 +10,6 @@ block content
         a.btn.btn-warning(href=`/consultas/hce?dni_paciente=${dni_paciente}`) Ver HCE
     div.border.w-75.p-4.bg-secondary.rounded-1
         form(action="./cargar" method="POST")
-        div#motivo.d-flex.flex-column.align-items-center
-            label.form-label Motivo
-            textarea#motivo-text.form-control.w-50
-        hr
         div#evolucion.bg-light.h-25.text-dark
             ul
                 each plantilla in medico.plantillas

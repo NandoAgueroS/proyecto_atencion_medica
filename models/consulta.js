@@ -5,7 +5,13 @@ module.exports = {
     findByPaciente: async (dniPaciente) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result, fields] = await connection.execute('SELECT * FROM consultas WHERE dni_paciente_fk = ?',[dniPaciente]);
+            const [result, fields] = await connection.execute(`
+                SELECT 
+                c.*,
+                t.motivo
+                FROM consultas c
+                JOIN turnos t ON c.id_turno_fk = t.id_turno
+                WHERE c.dni_paciente_fk = ?`,[dniPaciente]);
             connection.end();
             if (result.length > 0) {
                 return result;
@@ -119,10 +125,10 @@ module.exports = {
             return {};
         }
     },
-    save: async (id_consulta, motivo,evolucion) => {
+    save: async (id_consulta, evolucion) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('UPDATE consultas SET motivo = ?,evolucion = ?, id_estado_fk = 2 WHERE id_consulta = ?', [motivo, evolucion, id_consulta]);
+            const [result] = await connection.execute('UPDATE consultas SET evolucion = ?, id_estado_fk = 2 WHERE id_consulta = ?', [evolucion, id_consulta]);
             connection.end();
             return true;
         } catch (error) {

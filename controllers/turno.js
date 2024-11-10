@@ -19,7 +19,8 @@ exports.listar = async (req, res) => {
     console.log(especialidades)
     // res.send(await turno.get(matricula, fecha));
     res.render('agenda/agenda', {
-        turnos: turnos, especialidades: especialidades, 
+        turnos: turnos, 
+        especialidades: especialidades, 
         medico: {
             dni: req.session.dni, 
             nombre: req.session.nombre, 

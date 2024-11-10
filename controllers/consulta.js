@@ -32,7 +32,7 @@ exports.cargar = async (req, res) => {
     console.log(consultaData);
     // await turno.setAtendido(consultaData.id_turno);
     if(consultaData.id_consulta){
-        const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.motivo, consultaData.evolucion.descripcion);
+        const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.evolucion.descripcion);
         if(consultaData.alergias){
             // const alergiaSaved = 
             consultaData.alergias.forEach(async element => {
@@ -64,7 +64,7 @@ exports.cargar = async (req, res) => {
     res.redirect('/turnos');
 }
 exports.historiaClinica = async (req, res) => {
-    const dni = req.query.dni_paciente || "98765432A";
+    const dni = req.query.dni_paciente;
     console.log(dni);
     // res.send(await consulta.getHistoriaClinica(dni));
     const hce = [];
@@ -97,7 +97,7 @@ exports.historiaClinica = async (req, res) => {
     res.render('consulta/hce', {consultas: hce, medico: {dni: req.session.dni}});
 }
 const traerHistoriaClinica = async (dni_paciente) => {
-    const dni = dni_paciente || "98765432A";
+    const dni = dni_paciente;
     console.log(dni);
     // res.send(await consulta.getHistoriaClinica(dni));
     const hce = [];

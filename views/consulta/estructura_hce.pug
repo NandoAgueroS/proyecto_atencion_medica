@@ -34,8 +34,8 @@ div.h-100.w-100.m-5.d-flex.flex-column.align-items-center
                                             th Fin
                                         each alergia in consulta.alergias
                                             tr
-                                                td #{alergia.id_alergia_fk} 
-                                                td #{alergia.id_importancia_fk}
+                                                td #{alergia.nomenclatura} 
+                                                td #{alergia.importancia_descripcion}
                                                 td #{alergia.fecha_desde} 
                                                 td #{alergia.fecha_hasta}
                                         else
