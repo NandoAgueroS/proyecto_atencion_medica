@@ -63,39 +63,63 @@ exports.cargar = async (req, res) => {
     // res.status(200).end();
     res.redirect('/turnos');
 }
+exports.editar = async (req, res) => {
+    const ultimaConsulta = await consulta.getUltimaConsulta(req.query.dni_paciente, req.session.dni);
+    // console.log(ultimaConsulta);
+    const consulta_alergias = await alergia.findByConsulta(ultimaConsulta.id_consulta);
+    const diagnosticos = await diagnostico.findByConsulta(ultimaConsulta.id_consulta);
+    const medicamentos = await medicamento.findByConsulta(ultimaConsulta.id_consulta);
+    const habitos = await habito.findByConsulta(ultimaConsulta.id_consulta);
+    const antecedentes = await antecedente.findByConsulta(ultimaConsulta.id_consulta);
+    const alergias = await alergia.get();
+    const importanciasDeAlergias = await consulta.getImportanciasDeAlergias(); 
+    const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
+    console.log(estadosDeDiagonosticos)
+    res.render('consulta/editar_consulta',
+    {consulta:
+        {
+            id_consulta: ultimaConsulta.id_consulta,
+            evolucion: ultimaConsulta.evolucion,
+            motivo: ultimaConsulta.motivo,
+            fecha: formatearFechaYHora(ultimaConsulta.fecha),
+            alergias: consulta_alergias,
+            diagnosticos: diagnosticos,
+            medicamentos: medicamentos,
+            habitos: habitos,
+            antecedentes: antecedentes,
+        },
+        adicional:{
+            alergias: alergias,
+            estados_de_diagnosticos: estadosDeDiagonosticos,
+            importancias_de_alergias: importanciasDeAlergias,
+        }
+    })
+}
+
 exports.historiaClinica = async (req, res) => {
     const dni = req.query.dni_paciente;
     console.log(dni);
     // res.send(await consulta.getHistoriaClinica(dni));
-    const hce = [];
-    const consultasDelPaciente = await consulta.findByPaciente(dni);
-    // consultasDelPaciente.reverse();
-    // console.log(consultasDelPaciente);
-    for await (const element of consultasDelPaciente){
-        console.log(element);
-        try {
-            element.fecha = formatearFechaYHora(element.fecha);
-        } catch (error) {
-            console.log(error);
-        }
-        hce.push({
-            id_consulta: element.id_consulta,
-            fecha_consulta: element.fecha,
-            evolucion: element.evolucion,
-            motivo: element.motivo,
-            turno: await turno.findById(element.id_turno_fk),
-            diagnosticos: await diagnostico.findByConsulta(element.id_consulta),
-            alergias: await alergia.findByConsulta(element.id_consulta),
-            antecedentes: await antecedente.findByConsulta(element.id_consulta),
-            habitos: await habito.findByConsulta(element.id_consulta),
-            medicamentos: await medicamento.findByConsulta(element.id_consulta),
-            medico: await medico.findByIdTurno(element.id_turno_fk)
-        })
-    }
+    const alergias = await alergia.get();
+    const importanciasDeAlergias = await consulta.getImportanciasDeAlergias(); 
+    const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
+    const hce = await traerHistoriaClinica(dni);
     console.log(await hce);
     // res.json(hce);
-    res.render('consulta/hce', {consultas: hce, medico: {dni: req.session.dni}});
-}
+    res.render('consulta/hce',
+         {
+            dni_paciente: dni,
+            consultas: hce, 
+            medico: {
+                dni: req.session.dni, 
+                plantillas: await plantilla.findByMedico(req.session.dni)},
+            adicional:{
+                alergias: alergias,
+                estados_de_diagnosticos: estadosDeDiagonosticos,
+                importancias_de_alergias: importanciasDeAlergias,
+            }
+            });
+    }
 const traerHistoriaClinica = async (dni_paciente) => {
     const dni = dni_paciente;
     console.log(dni);

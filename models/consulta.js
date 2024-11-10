@@ -23,6 +23,32 @@ module.exports = {
             return [];
         }
     },
+    getUltimaConsulta: async (dniPaciente, dniMedico) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute(`
+                SELECT c.*
+                FROM consultas c
+                JOIN turnos t ON t.id_turno = c.id_turno_fk
+                JOIN agendas a ON a.id_agenda = t.id_agenda_fk
+                JOIN medicos_especialidades me ON me.matricula = a.matricula_fk
+                WHERE c.dni_paciente_fk = ?
+                AND me.dni_medico_fk = ?
+                ORDER BY c.fecha DESC
+                LIMIT 1
+                `,[dniPaciente, dniMedico]);
+            connection.end();
+            if (result.length === 1) {
+                return result[0];
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+    ,
     getHistoriaClinica: async (dni_paciente) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
