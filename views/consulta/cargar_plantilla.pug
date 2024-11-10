@@ -1,0 +1,19 @@
+extends ../layout
+block head_adicional
+    link(href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet")
+
+block content
+    h2 title
+    label nombre de la plantilla
+    input#nombre(type="text")
+    label descripcion de la plantilla
+    textarea#descripcion
+    div.bg-light.text-dark
+        div#plantilla-nueva
+    button#guardar-plantilla.btn.btn-primary(type="button") Guardar
+    script(src="/javascripts/cargar_plantilla_script.js")
+    script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
+    script.
+        const quill = new Quill('#plantilla-nueva', {
+            theme: 'snow'
+        });

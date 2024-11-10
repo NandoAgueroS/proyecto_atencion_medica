@@ -13,4 +13,20 @@ html
     
     block head_adicional
   body.bg-dark.text-light.d-flex.flex-column.align-items-center
+    nav.navbar.navbar-expand-lg.bg-body-tertiary
+      div.container-fluid
+        a.navbar-brand(href='#') Agenda
+        button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarNavDropdown', aria-controls='navbarNavDropdown', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        div#navbarNavDropdown.collapse.navbar-collapse
+          ul.navbar-nav
+            <!--li.nav-item
+              a.nav-link.active(aria-current='page', href='#') Home -->
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false') Plantillas
+              ul.dropdown-menu
+                li
+                  a.dropdown-item(href='/plantillas') Ver
+                li
+                  a.dropdown-item(href='/plantillas') Agregar
     block content

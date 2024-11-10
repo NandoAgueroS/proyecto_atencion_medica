@@ -12,7 +12,7 @@ const consultasRouter = require('./routes/consultas');
 const turnosRouter = require('./routes/turnos');
 const alergiasRouter = require('./routes/alergias');
 const loginRouter = require('./routes/login');
-
+const plantillasRouter = require('./routes/plantillas');
 const autenticacion = require('./middlewares/autenticacion')
 
 var app = express();
@@ -40,11 +40,12 @@ app.use(
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use('/medicos', autenticacion.isAuthenticated ,medicosRouter);
-app.use('/consultas', consultasRouter);
-app.use('/turnos', autenticacion.isAuthenticated, turnosRouter);
-app.use('/alergias', alergiasRouter);
 app.use('/login', loginRouter);
+app.use('/medicos', autenticacion.isAuthenticated ,medicosRouter);
+app.use('/consultas', autenticacion.isAuthenticated, consultasRouter);
+app.use('/turnos', autenticacion.isAuthenticated, turnosRouter);
+app.use('/alergias',autenticacion.isAuthenticated, alergiasRouter);
+app.use('/plantillas', autenticacion.isAuthenticated, plantillasRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

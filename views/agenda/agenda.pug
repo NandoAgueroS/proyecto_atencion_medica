@@ -37,7 +37,8 @@ block content
                     
                         if (turno.id_estado_fk === 3) 
                             td(class= estadoClass) #{turno.estado}
-                            td
+                            td.d-flex.flex-row.justify-content-around
+                                a(href=`/consultas/hce/?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-secondary btn-sm") Ver HCE
                         else 
                             td(class= estadoClass) #{turno.estado}
                             td.d-flex.flex-row.justify-content-around
