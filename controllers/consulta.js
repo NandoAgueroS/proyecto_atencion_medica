@@ -96,8 +96,78 @@ exports.editar = async (req, res) => {
     })
 }
 exports.actualizar = async (req, res) => {
-    const consultaData = req.body;
-    console.log(consultaData)
+    console.log(req.body);
+    const eliminar = req.body.eliminar;
+    if(eliminar.alergias.length > 0) {
+        const alergiasEliminadas = await alergia.delete(eliminar.alergias);
+    }
+    if(eliminar.alergias.length > 0) {
+        const diagnosticosEliminados = await diagnostico.delete(eliminar.diagnosticos);
+    }
+    if(eliminar.medicamentos.length > 0) {
+    const medicamentosEliminados = await medicamento.delete(eliminar.medicamentos);
+    }
+    if(eliminar.habitos.length > 0) {
+        const habitosEliminados = await habito.delete(eliminar.habitos);
+    }
+    if(eliminar.antecedentes.length > 0) {
+        const antecedentesEliminados = await antecedente.delete(eliminar.antecedentes);
+    }
+    const insertar = req.body.insertar;
+    if(insertar.alergias.length > 0) {
+        const alergiasInsertadas = await alergia.saveMultiple(insertar.alergias);
+    }
+    if(insertar.diagnosticos.length > 0) {
+        const diagnosticosInsertados = await diagnostico.saveMultiple(insertar.diagnosticos);
+    }
+    if(insertar.medicamentos.length > 0) {
+        const medicamentosInsertados = await medicamento.saveMultiple(insertar.medicamentos);
+    }
+    if(insertar.habitos.length > 0) {
+        const habitosInsertados = await habito.saveMultiple(insertar.habitos);
+    }
+    if(insertar.antecedentes.length > 0) {
+        const antecedentesInsertados = await antecedente.saveMultiple(insertar.antecedentes);
+    }
+    
+    const actualizar = req.body.actualizar;
+    // const alergiasActualizadas = await alergia.update(actualizar.alergias);
+    // const diagnosticosActualizados = await diagnostico.update(actualizar.diagnosticos);
+    // const medicamentosActualizados = await medicamento.update(actualizar.medicamentos);
+    // const habitosActualizados = await habito.update(actualizar.habitos);
+    // const antecedentesActualizados = await antecedente.update(actualizar.antecedentes);
+    console.log("---------",actualizar.habitos,"-------------");
+    if (actualizar.alergias.length > 0) {
+        for (const element of actualizar.alergias) {
+            await alergia.update(element.id_alergia, element.id_importancia, element.descripcion, element.fecha_desde, element.fecha_hasta, element.id);
+        }
+    }
+    if (actualizar.antecedentes.length > 0) {
+        for (const element of actualizar.antecedentes) {
+            await antecedente.update(element.descripcion, element.fecha_desde, element.fecha_hasta, element.id);
+        }
+    }
+    if (actualizar.habitos.length > 0) {
+        for (const element of actualizar.habitos) {
+            await habito.update(element.descripcion, element.fecha_desde, element.fecha_hasta, element.id);
+        }
+    }
+    if (actualizar.diagnosticos.length > 0) {
+        for (const element of actualizar.diagnosticos) {
+            await diagnostico.update(element.descripcion, element.id_estado, element.id);
+        }
+    }
+    if (actualizar.medicamentos.length > 0) {
+        for (const element of actualizar.medicamentos) {
+            await medicamento.update(element.descripcion, element.id);
+        }
+    }
+    console.log("datos recibidos:");
+    console.log(eliminar, actualizar);
+    // console.log("actualizaciones:",alergiasActualizadas, diagnosticosActualizados, medicamentosActualizados, habitosActualizados, antecedentesActualizados);
+    // console.log("eliminaciones:",alergiasEliminadas, diagnosticosEliminados, medicamentosEliminados, habitosEliminados, antecedentesEliminados);
+    // console.log("insersiones:",alergiasInsertadas, diagnosticosInsertados, medicamentosInsertados, habitosInsertados, antecedentesInsertados);
+    res.status(200).end();
 }
 exports.evolucion = async (req, res) => {
     const idConsulta = req.params.id;

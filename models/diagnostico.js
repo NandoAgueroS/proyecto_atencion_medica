@@ -12,6 +12,21 @@ module.exports = {
             return false;
         }
     },
+    saveMultiple: async (diagnosticos) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('INSERT INTO diagnosticos (descripcion, id_estado_fk, id_consulta_fk) VALUES ?', diagnosticos);
+            connection.end();
+            if (result.affectedRows = diagnosticos.length) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    },
     findByConsulta: async (consulta) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
@@ -25,6 +40,37 @@ module.exports = {
         } catch (error) {
             console.log(error);
             return [];
+        }
+    },
+    delete: async (ids_diagnostico) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('DELETE FROM diagnosticos WHERE id_diagnostico IN (?)', ids_diagnostico);
+            connection.end();
+            if (result.affectedRows = ids_diagnostico.length) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    },
+    update: async (descripcion, idEstado, idDiagnostico) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('UPDATE diagnosticos SET descripcion = ?, id_estado_fk = ? WHERE id_diagnostico = ?',
+                 [descripcion, idEstado, idDiagnostico]);
+            connection.end();
+            if (result.affectedRows = 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
         }
     }
 }

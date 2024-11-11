@@ -223,8 +223,8 @@ function recuperarDiagnosticos(itemHTML) {
         items.push(
             {
                 descripcion: element.querySelector('textarea').value,
-                descripcion: element.querySelector('textarea').getAttribute('id_item'),
-                id_estado: element.querySelector('input[type="radio"]:checked').value
+                id_estado: element.querySelector('input[type="radio"]:checked').value,
+                id: element.querySelector('textarea').getAttribute('id_item')
             }
 )});
     return items;
@@ -235,10 +235,10 @@ function recuperarAlergias (itemHTML) {
         items.push(
             {
                 id_alergia: element.querySelector('.valor-alergia').getAttribute('id_alergia'),
-                id: element.querySelector('.valor-alergia').getAttribute('id_item'),
                 id_importancia: element.querySelector('.valor-importancia').getAttribute('id_importancia'),
                 fecha_desde: element.querySelector('.fecha-desde').value || '',
-                fecha_hasta: element.querySelector('.fecha-hasta').value || ''
+                fecha_hasta: element.querySelector('.fecha-hasta').value || '',
+                id: element.querySelector('.valor-alergia').getAttribute('id_item')
             }
         )});
     return items;
@@ -249,9 +249,9 @@ function recuperarTextAreaFechas(itemHTML) {
         items.push(
             {
                 descripcion: element.querySelector('textarea').value || '',
-                id: element.querySelector('textarea').getAttribute('id_item'),
                 fecha_desde: element.querySelector('input.fecha-desde').value || '',
-                fecha_hasta: element.querySelector('input.fecha-hasta').value || ''
+                fecha_hasta: element.querySelector('input.fecha-hasta').value || '',
+                id: element.querySelector('textarea').getAttribute('id_item')
             }
         )
     });
