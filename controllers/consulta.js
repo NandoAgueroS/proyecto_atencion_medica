@@ -74,7 +74,7 @@ exports.editar = async (req, res) => {
     const alergias = await alergia.get();
     const importanciasDeAlergias = await consulta.getImportanciasDeAlergias(); 
     const estadosDeDiagonosticos = await consulta.getEstadosDeDiagnosticos();
-    console.log(estadosDeDiagonosticos)
+    console.log(ultimaConsulta);
     res.render('consulta/editar_consulta',
     {consulta:
         {
@@ -95,7 +95,16 @@ exports.editar = async (req, res) => {
         }
     })
 }
-
+exports.actualizar = async (req, res) => {
+    const consultaData = req.body;
+    console.log(consultaData)
+}
+exports.evolucion = async (req, res) => {
+    const idConsulta = req.params.id;
+    const evolucion = await consulta.getEvolucion(idConsulta);
+    console.log(evolucion);
+    res.json(evolucion);
+}
 exports.historiaClinica = async (req, res) => {
     const dni = req.query.dni_paciente;
     console.log(dni);
@@ -168,3 +177,9 @@ function formatearFechaYHora(fecha) {
     const second = String(fecha.getSeconds()).padStart(2, '0');
     return `${day}-${month}-${year} ${hour}:${minute}:${second}`;
 }
+// function formatearFecha(fecha) {
+//     const day = String(fecha.getDate()).padStart(2, '0');
+//     const month = String(fecha.getMonth() + 1).padStart(2, '0');
+//     const year = fecha.getFullYear();
+//     return `${day}-${month}-${year}`;
+// }

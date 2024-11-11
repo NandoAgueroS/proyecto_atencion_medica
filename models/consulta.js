@@ -47,6 +47,21 @@ module.exports = {
             console.log(error);
             return null;
         }
+    },
+    getEvolucion: async (id_consulta) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result, fields] = await connection.execute('SELECT evolucion FROM consultas WHERE id_consulta = ?', [id_consulta]);
+            connection.end();
+            if (result.length === 1) {
+                return result[0];
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
     }
     ,
     getHistoriaClinica: async (dni_paciente) => {

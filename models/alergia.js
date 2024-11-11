@@ -33,6 +33,7 @@ module.exports = {
             const connection = await mysql.createConnection(datosConexion);
             const [result, fields] = await connection.execute(`
                 SELECT 
+                ca.id_consulta_alergia,
                 ca.fecha_desde,
                 ca.fecha_hasta,
                 a.nomenclatura,

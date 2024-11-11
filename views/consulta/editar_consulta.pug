@@ -4,7 +4,18 @@ block head_adicional
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
     link(href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet")
 block content
+    mixin inputFecha(fecha, clases, id)
+        - fecha = new Date(fecha)
+        - const day = String(fecha.getDate()).padStart(2, '0')
+        - const month = String(fecha.getMonth() + 1).padStart(2, '0')
+        - const year = fecha.getFullYear()
+            if(day && month && year)
+                - fecha = `${year}-${month}-${day}`
+            else
+                - fecha = ""
+        input(class=clases type="date" id=id value=fecha)
     div.border.w-75.p-4.bg-secondary.rounded-1
+        input#id-consulta(value= consulta.id_consulta type=text disabled)
         form(action="./cargar" method="POST")
         div#evolucion.bg-light.h-25.text-dark
             //label.form-label Evolución
@@ -12,64 +23,115 @@ block content
             div#evolucion-text
         hr
         div#diagnosticos
+            - nroDiagnostico = 0
             label.form-label Diagnosticos
             div#diagnosticos-container
-               <!-- div.diagnostico-info.d-flex.flex-row
-                    textarea.form-control
-                    div#estados-diagnosticos.form-check
-                        each estado in adicional.estados_de_diagnosticos
-                            div
-                                label.form-check-label(for="estado-diagnostico") #{estado.descripcion}
-                                input.form-check-input(type="radio" name="estado-diagnostico" id_estado=estado.id_estado)
-                    button#remover_antecedente.btn.btn-danger.h-25.m-3(type="button" onclick="removerAntecedente(this)") - -->
+                each diagnostico in consulta.diagnosticos
+                    div.diagnostico-info.d-flex.flex-row.mb-3
+                        textarea.form-control(id_item=diagnostico.id_diagnostico)
+                            = diagnostico.descripcion
+                        div#estados-diagnosticos.form-check
+                            each estado in adicional.estados_de_diagnosticos
+                                - nroDiagnostico++
+                                div
+                                    label.form-check-label(for="estado-diagnostico") #{estado.descripcion}
+                                    if (estado.id_estado === diagnostico.id_estado_fk)
+                                        input.form-check-input(type="radio" id_diagnostico= diagnostico.id_diagnostico name=`estado-diagnostico-${nroDiagnostico}` id_estado=estado.id_estado checked)
+                                    else
+                                        input.form-check-input(type="radio" name=`estado-diagnostico-${nroDiagnostico}` id_estado=estado.id_estado)
+                        button#remover_antecedente.btn.btn-danger.h-25.m-3(type="button" onclick=`removerItem(this,"diagnosticos",${diagnostico.id_diagnostico})`) -
             button#agregar-diagnostico.btn.btn-primary(type="button") +
         hr
-        div.d-flex.flex-column.align-items-center
-            button.btn.btn-light.m-3.fs-5(type="button" data-toggle="collapse" data-target=`#collapse-opcionales` aria-expanded="false" aria-controls=`collapse-opcionales`) Datos opcionales
-            div.border.w-100.p-3.m-3.collapse(id=`collapse-opcionales`)
-                div#alergias.d-flex
-                    div#carga_alergias
-                        label.form-label Alergias
-                        select#alergia.form-select.w-auto
-                            option(value="" disabled selected) Seleccione una Alergia
-                            each alergia in adicional.alergias
-                                option(value=alergia.id_alergia) #{alergia.nomenclatura}
-                                
-                        select#importancia.form-select.w-auto.mt-2
-                            option(value="" disabled selected) Seleccione una Importancia
-                            each importancia in adicional.importancias_de_alergias
-                                option(value=importancia.id_importancia) #{importancia.descripcion}
+        div#alergias.d-flex
+            div#carga_alergias
+                label.form-label Alergias
+                select#alergia.form-select.w-auto
+                    option(value="" disabled selected) Seleccione una Alergia
+                    each alergia in adicional.alergias
+                        option(value=alergia.id_alergia) #{alergia.nomenclatura}
+                        
+                select#importancia.form-select.w-auto.mt-2
+                    option(value="" disabled selected) Seleccione una Importancia
+                    each importancia in adicional.importancias_de_alergias
+                        option(value=importancia.id_importancia) #{importancia.descripcion}
 
+                div.d-flex
+                    div.d-flex.flex-column.align-items-center
+                        label.form-label inicio
+                        input#alergia-inicio.form-control.w-auto(type="date")
+                    div.d-flex.flex-column.align-items-center
+                        label.form-label fin
+                        input#alergia-fin.form-control.w-auto(type="date")
+                button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
+            div#alergias-seleccionadas.border.m-1.mx-3.px-2.w-75.rounded-3
+                p alergias seleccionadas
+                each alergia1 in consulta.alergias
+                    div.alergia-guardada.d-flex.flex-column.align-items-center
+                        div.d-flex.flex-row.justify-content-center
+                            select.form-select.w-auto(id=`alergia-${alergia1.id_alergia}`)
+                                option(value="" disabled selected) Seleccione una Alergia
+                                each alergia in adicional.alergias
+                                    if(alergia1.id_alergia === alergia.id_alergia)
+                                        option.valor-alergia(value=alergia.id_alergia selected id_item=alergia1.id_consulta_alergia id_alergia=alergia1.id_alergia) #{alergia.nomenclatura}
+                                    else
+                                        option(value=alergia.id_alergia) #{alergia.nomenclatura}
+                                    
+                            select.form-select.w-auto.mt-2(id=`importancia-${alergia1.id_alergia}`)
+                                option(value="" disabled selected) Seleccione una Importancia
+                                each importancia in adicional.importancias_de_alergias
+                                    if(alergia1.id_importancia === importancia.id_importancia)
+                                        option.valor-importancia(value=importancia.id_importancia id_importancia=alergia1.id_importancia selected) #{importancia.descripcion}
+                                    else
+                                        option(value=importancia.id_importancia) #{importancia.descripcion}
                         div.d-flex
                             div.d-flex.flex-column.align-items-center
                                 label.form-label inicio
-                                input#alergia-inicio.form-control.w-auto(type="date")
+                                +inputFecha(alergia1.fecha_desde, "form-control w-auto fecha-desde",`alergia-inicio-${alergia1.id_alergia}`)
+                                
                             div.d-flex.flex-column.align-items-center
                                 label.form-label fin
-                                input#alergia-fin.form-control.w-auto(type="date")
-                        button#agregar_alergia.btn.btn-success.m-3(type="button") agregar
-                    div#alergias-seleccionadas.border.m-1.mx-3.px-2.w-50.rounded-3
-                        p alergias seleccionadas
-                hr
-                div#antecedentes
-                    div#antecedentes-container
-                        label.form-label Antecedentes
-                        //textarea.form-control.w-50.mb-3
-                    button#nuevo_antecedente.btn.btn-primary(type="button") +
-                hr
-                div#habitos
-                    div#habitos-container
-                        label.form-label Habitos
-                    button#nuevo_habito.btn.btn-primary(type="button") +
-                hr
-                div#medicamentos
-                    div#medicamentos-container
-                        label.form-label Medicamentos
-                    button#nuevo_medicamento.btn.btn-primary(type="button") +
-        button.btn.btn-primary(onclick=`finalizarConsulta()`) finalizar
-    script(src="/javascripts/edit_consulta_script.js")
+                                +inputFecha(alergia1.fecha_hasta, "form-control w-auto fecha-hasta",`alergia-fin-${alergia1.id_alergia}`)
+                            button.btn.btn-danger.h-25.m-3(onclick=`removerItem(this.parentElement, "alergias", ${alergia1.id_consulta_alergia})` type="button") -
+                    hr
+        hr
+        div#antecedentes
+            label.form-label Antecedentes
+            div#antecedentes-container
+                each antecedente in consulta.antecedentes
+                    div.d-flex.flex-row
+                        div.antecedente-info.d-flex.flex-row.mb-3
+                            textarea.form-control.w-50(id_item=antecedente.id_antecedente)
+                                = antecedente.descripcion
+                            +inputFecha(antecedente.fecha_desde, "fecha-desde form-control h-50 w-auto m-3")
+                            +inputFecha(antecedente.fecha_hasta, "fecha-hasta form-control h-50 w-auto m-3")
+                        button.btn.btn-danger.h-25.m-3(onclick=`removerItem(this, "antecedentes", ${antecedente.id_antecedente})` type="button") -
+                //textarea.form-control.w-50.mb-3
+            button#nuevo_antecedente.btn.btn-primary(type="button") +
+        hr
+        div#habitos
+            label.form-label Habitos
+            div#habitos-container
+                each habito in consulta.habitos
+                    div.d-flex.flex-row
+                        div.habito-info.d-flex.flex-row.mb-3
+                            textarea.form-control.w-50(id_item=habito.id_habito)
+                                = habito.descripcion
+                            +inputFecha(habito.fecha_desde, "fecha-desde form-control h-50 w-auto m-3")
+                            +inputFecha(habito.fecha_hasta, "fecha-hasta form-control h-50 w-auto m-3")
+                        button.btn.btn-danger.h-25.m-3(onclick=`removerItem(this, "habitos", ${habito.id_habito})` type="button") -
+            button#nuevo_habito.btn.btn-primary(type="button") +
+        hr
+        div#medicamentos
+            div#medicamentos-container
+                label.form-label Medicamentos
+                each medicamento in consulta.medicamentos
+                    div.medicamento-info.d-flex.flex-row
+                        textarea.form-control.w-50(id_item=medicamento.id_medicamento)
+                            = medicamento.descripcion
+                        button.btn.btn-danger.h-25.m-3(onclick=`removerItem(this, "medicamentos", ${medicamento.id_medicamento})` type="button") -
+            button#nuevo_medicamento.btn.btn-primary(type="button") +
+    button.btn.btn-primary(onclick=`guardarConsulta()`) finalizar
     script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
+    script(src="/javascripts/editar_consulta_script.js")
     script.
-        const quill = new Quill('#evolucion-text', {
-        theme: 'snow'
-        });
+        

@@ -1,3 +1,6 @@
+const quill = new Quill('#evolucion-text', {
+    theme: 'snow'
+    });
 function cargarPlantilla(elemento){
     const plantilla = elemento.parentElement.querySelector('input[type="hidden"]').value;
     const evolucionContainer = document.getElementById('evolucion-text');
@@ -5,7 +8,13 @@ function cargarPlantilla(elemento){
     console.log(evolucionHTML, plantilla);
     evolucionHTML.innerHTML = plantilla;
 }
-
+fetchEvolucion();
+async function fetchEvolucion(){
+    const idConsulta = document.getElementById('id-consulta').value;
+    const evolucion = await fetch('/consultas/evolucion/'+idConsulta);
+    const evolucionJSON = await evolucion.json();
+    quill.root.innerHTML = evolucionJSON.evolucion;
+}
 function agregarAlergia() {
     const alergia = document.getElementById('alergia');
     const alergiasSeleccionadas = document.getElementById('alergias-seleccionadas');
@@ -85,8 +94,35 @@ document.getElementById('nuevo_medicamento').addEventListener('click', function(
     `
     nuevoMedicamentoDiv.innerHTML = nuevoMedicamento;
     medicamentos.append(nuevoMedicamentoDiv);
-})   
-function removerItem(element) {
+})
+const itemsAEliminar = {
+    diagnosticos: [],
+    medicamentos: [],
+    antecedentes: [],
+    alergias: [],
+    habitos: []
+};
+function removerItem(element,item, id) {
+    console.log(item);
+    console.log(id);
+    switch (item) {
+        case 'diagnosticos':
+            itemsAEliminar.diagnosticos.push(id);
+            break;
+        case 'medicamentos':
+            itemsAEliminar.medicamentos.push(id);
+            break;
+        case 'antecedentes':
+            itemsAEliminar.antecedentes.push(id);
+            break;
+        case 'alergias':
+            itemsAEliminar.alergias.push(id);
+            break;
+        case 'habitos':
+            itemsAEliminar.habitos.push(id);
+            break;
+    }
+    console.log(itemsAEliminar);
     element.parentElement.remove();
 }
 let numeroDiagnostico = 0;
@@ -139,7 +175,7 @@ function finalizarConsulta(idConsulta) {
 function guardarConsulta(idConsulta) {
     const consulta = datosDeConsulta();
     console.log(consulta);
-    // updateConsulta(consulta);
+    updateConsulta(consulta);
 }
 function datosDeConsulta(){
 
@@ -170,18 +206,8 @@ function datosDeConsulta(){
     const medicamentoHTML = medicamentosContainer.querySelectorAll('.medicamento-info');
     const medicamentos = recuperarTextArea(medicamentoHTML);
     
-    const evolucionContainer = document.getElementById('evolucion-text');
-    // const evolucionHTML = evolucionContainer.querySelector('[class="ql-editor"]').children;
-    const evolucionHTML = '';
-    console.log(evolucionHTML);
-    let descEvolucion = '';
-    // evolucionHTML.forEach(element => {
-    //     descEvolucion += element.outerHTML;
-    // })
-    for (const element of evolucionHTML) {
-        descEvolucion += element.outerHTML;
-    }
-    const evolucion = {descripcion: descEvolucion }
+    const evolucionQuill = quill.root.innerHTML;
+    const evolucion = {descripcion: evolucionQuill};
     const idConsulta = document.getElementById('id-consulta').value;
     console.log(evolucion);
     console.log(diagnosticos);
@@ -197,6 +223,7 @@ function recuperarDiagnosticos(itemHTML) {
         items.push(
             {
                 descripcion: element.querySelector('textarea').value,
+                descripcion: element.querySelector('textarea').getAttribute('id_item'),
                 id_estado: element.querySelector('input[type="radio"]:checked').value
             }
 )});
@@ -208,6 +235,7 @@ function recuperarAlergias (itemHTML) {
         items.push(
             {
                 id_alergia: element.querySelector('.valor-alergia').getAttribute('id_alergia'),
+                id: element.querySelector('.valor-alergia').getAttribute('id_item'),
                 id_importancia: element.querySelector('.valor-importancia').getAttribute('id_importancia'),
                 fecha_desde: element.querySelector('.fecha-desde').value || '',
                 fecha_hasta: element.querySelector('.fecha-hasta').value || ''
@@ -221,6 +249,7 @@ function recuperarTextAreaFechas(itemHTML) {
         items.push(
             {
                 descripcion: element.querySelector('textarea').value || '',
+                id: element.querySelector('textarea').getAttribute('id_item'),
                 fecha_desde: element.querySelector('input.fecha-desde').value || '',
                 fecha_hasta: element.querySelector('input.fecha-hasta').value || ''
             }
@@ -233,7 +262,8 @@ function recuperarTextArea(itemHTML) {
     itemHTML.forEach(element => {
         items.push(
             {
-                descripcion: element.querySelector('textarea').value || ''
+                descripcion: element.querySelector('textarea').value || '',
+                id: element.querySelector('textarea').getAttribute('id_item'),
             }
         )
     });
@@ -262,17 +292,36 @@ async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antec
         window.location.href = data.url+'?matricula='+matricula;
     }
 }
+function filtrarNuevosItems(items){
+    return items.filter(item => item.id == null);
+}
+function filtrarViejosItems(items){
+    return items.filter(item => item.id != null);
+}
 async function updateConsulta(consulta){
+        const actualizar = {
+            alergias: filtrarViejosItems(consulta.alergias),
+            diagnosticos: filtrarViejosItems(consulta.diagnosticos),
+            antecedentes: filtrarViejosItems(consulta.antecedentes),
+            habitos: filtrarViejosItems(consulta.habitos),
+            medicamentos: filtrarViejosItems(consulta.medicamentos)
+        }
+        const insertar = {
+            alergias: filtrarNuevosItems(consulta.alergias),
+            diagnosticos: filtrarNuevosItems(consulta.diagnosticos),
+            antecedentes: filtrarNuevosItems(consulta.antecedentes),
+            habitos: filtrarNuevosItems(consulta.habitos),
+            medicamentos: filtrarNuevosItems(consulta.medicamentos)
+        }
     const datos = {
+        
         id_consulta: consulta.idConsulta,
         evolucion: consulta.evolucion,
-        diagnosticos: consulta.diagnosticos,
-        alergias: consulta.alergias,
-        antecedentes: consulta.antecedentes,
-        habitos: consulta.habitos,
-        medicamentos: consulta.medicamentos
+        actualizar: actualizar,
+        insertar: insertar,
+        eliminar: itemsAEliminar
     }
-    const data = await fetch('/consultas/editar',{
+    const data = await fetch('/consultas/actualizar',{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -282,5 +331,8 @@ async function updateConsulta(consulta){
     const matricula = localStorage.getItem('matricula');
     if (data.redirected){
         window.location.href = data.url+'?matricula='+matricula;
+    }
+    if (data.status == 200) {
+        itemsAEliminar = [];
     }
 }

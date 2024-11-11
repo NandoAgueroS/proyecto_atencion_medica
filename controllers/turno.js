@@ -12,7 +12,7 @@ exports.listar = async (req, res) => {
         }
     })
     const turnos = await turno.get(matricula, fecha);
-    console.log(matricula, fecha);
+    // console.log(matricula, fecha);
     turnos.forEach(turno => {
         turno.fecha = formatearFecha(turno.fecha);
     })
