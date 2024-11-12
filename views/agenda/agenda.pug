@@ -4,59 +4,63 @@ block head_adicional
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
     script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
 block content
-    h2 Bienvenido #{medico.nombre}
-    h3 Administracion de Agendas
-    a.btn.btn-danger(href="/login/logout") Cerrar sessión
-        <!--table.table.table-striped.table-hover-->
-    select#select-especialidad.form-select.w-auto.bg-secondary.text-light.mb-3
-        each especialidad in especialidades
-            option(value=especialidad.matricula selected=especialidad.selected) #{especialidad.descripcion} - #{especialidad.matricula}
-    div.bg-secondary.w-75.rounded-5.p-5
-        table#myTable
-            thead
-                tr
-                    th Paciente
-                    th Motivo
-                    th Fecha
-                    th Hora
-                    th Estado
-                    th Accion
-            tbody
-                - let estadoClass = ""
-                each turno in turnos
+    div.d-flex.flex-column.align-items-center
+        h2 Bienvenido #{medico.nombre}
+        h3 Administracion de Agendas
+            <!--table.table.table-striped.table-hover-->
+        form.d-flex.flex-row.align-items-center.m-3.w-50.justify-content-between(action="")
+            select#select-especialidad.form-select.w-auto.bg-secondary.text-light(name="matricula")
+                each especialidad in especialidades
+                    option(value=especialidad.matricula selected=especialidad.selected) #{especialidad.descripcion} - #{especialidad.matricula}
+            input.form-control.w-auto.bg-secondary.text-light(type="date" name="dia_agenda" id="dia_agenda" value= date)
+            button.btn.btn-success(type="button" onclick="consultarAgenda()") Consultar
+        div.bg-secondary.w-75.rounded-5.p-5
+            table#myTable
+                thead
                     tr
-                        td #{turno.nombre_paciente} #{turno.apellido_paciente}
-                        td 
-                            = turno.motivo
-                        td #{turno.fecha}
-                        td #{turno.hora}
-                        case turno.id_estado_fk
-                            when 1
-                                - estadoClass="turno-pendiente"
-                            when 2
-                                - estadoClass="turno-presente"
-                            when 3
-                                - estadoClass="turno-atendido"
-                    
-                        if (turno.id_estado_fk === 3) 
-                            td(class= estadoClass) #{turno.estado}
-                            td.d-flex.flex-row.justify-content-around
-                                a(href=`/consultas/hce/?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-secondary btn-sm") Ver HCE
-                        else 
-                            td(class= estadoClass) #{turno.estado}
-                            td.d-flex.flex-row.justify-content-around
-                                a(href=`/consultas/hce/?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-secondary btn-sm") Ver HCE
-                                a(href=`/consultas/iniciar/${turno.id_turno}?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-primary btn-sm") Iniciar Atención
-                else
-                    td no hay turnos
-                    td
-                    td
-                    td
-                    td
-                    td
-    script.
-        let table = new DataTable('#myTable')
-        const selectTable = document.getElementById("dt-length-0")
-        console.log(selectTable)
-        selectTable.classList.add('bg-secondary')
-    script(src="javascripts/agenda_script.js")
+                        th Paciente
+                        th Motivo
+                        th Fecha
+                        th Hora
+                        th Estado
+                        th Accion
+                tbody
+                    - let estadoClass = ""
+                    each turno in turnos
+                        tr
+                            td #{turno.nombre_paciente} #{turno.apellido_paciente}
+                            td 
+                                = turno.motivo
+                            td 
+                                +formatearFecha(turno.fecha)
+                            td #{turno.hora}
+                            case turno.id_estado_fk
+                                when 1
+                                    - estadoClass="turno-pendiente"
+                                when 2
+                                    - estadoClass="turno-presente"
+                                when 3
+                                    - estadoClass="turno-atendido"
+                        
+                            if (turno.id_estado_fk === 3) 
+                                td(class= estadoClass) #{turno.estado}
+                                td.d-flex.flex-row.justify-content-around
+                                    a(href=`/consultas/hce/?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-secondary btn-sm") Ver HCE
+                            else 
+                                td(class= estadoClass) #{turno.estado}
+                                td.d-flex.flex-row.justify-content-around
+                                    a(href=`/consultas/hce/?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-secondary btn-sm") Ver HCE
+                                    a(href=`/consultas/iniciar/${turno.id_turno}?dni_paciente=${turno.dni_paciente_fk}` class="btn btn-primary btn-sm") Iniciar Atención
+                    else
+                        td no hay turnos
+                        td
+                        td
+                        td
+                        td
+                        td
+        script.
+            let table = new DataTable('#myTable')
+            const selectTable = document.getElementById("dt-length-0")
+            console.log(selectTable)
+            selectTable.classList.add('bg-secondary')
+        script(src="javascripts/agenda_script.js")

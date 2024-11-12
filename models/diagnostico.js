@@ -30,7 +30,14 @@ module.exports = {
     findByConsulta: async (consulta) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result, fields] = await connection.execute('SELECT * FROM diagnosticos WHERE id_consulta_fk = ?', [consulta]);
+            const [result, fields] = await connection.execute(`
+                SELECT 
+                d.*,
+                e.descripcion AS estado 
+                FROM diagnosticos d
+                JOIN estados_de_diagnosticos e ON d.id_estado_fk = e.id_estado
+                WHERE id_consulta_fk = ?`, 
+                [consulta]);
             connection.end();
             if (result.length > 0) {
                 return result;

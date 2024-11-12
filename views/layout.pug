@@ -1,3 +1,21 @@
+mixin formatearFecha(fecha)
+        - fecha = new Date(fecha)
+        - let day = String(fecha.getDate()).padStart(2, '0');
+        - let month = String(fecha.getMonth() + 1).padStart(2, '0');
+        - let year = fecha.getFullYear();
+        if (day && month && year) 
+            return #{day}-#{month}-#{year}
+mixin formatearFechaYHora(fecha)
+        - const day = String(fecha.getDate()).padStart(2, '0');
+        - const month = String(fecha.getMonth() + 1).padStart(2, '0');
+        - const year = fecha.getFullYear();
+        - const hour = String(fecha.getHours()).padStart(2, '0');
+        - const minute = String(fecha.getMinutes()).padStart(2, '0');
+        - const second = String(fecha.getSeconds()).padStart(2, '0');
+        if (day && month && year && hour && minute && second)
+          return #{day}-#{month}-#{year} #{hour}:#{minute}:#{second}
+        else
+          return Error al mostrar la fecha
 doctype html
 html
   head
@@ -12,7 +30,7 @@ html
 
     
     block head_adicional
-  body.bg-dark.text-light.d-flex.flex-column.align-items-center
+  body.bg-dark.text-light
     nav.navbar.navbar-expand-lg.bg-body-tertiary
       div.container-fluid
         a.navbar-brand(href='/turnos') Agenda
@@ -29,4 +47,5 @@ html
                   a.dropdown-item(href='/plantillas') Ver
                 li
                   a.dropdown-item(href='/plantillas') Agregar
+        a.btn.btn-danger(href="/login/logout") Salir
     block content

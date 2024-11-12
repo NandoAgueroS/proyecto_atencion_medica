@@ -31,7 +31,8 @@ exports.cargar = async (req, res) => {
     const consultaData = req.body;
     console.log(consultaData);
     // await turno.setAtendido(consultaData.id_turno);
-    if(consultaData.id_consulta){
+    console.log(consultaData.evolucion);
+    if(consultaData.id_consulta && consultaData.evolucion.descripcion){
         const consultaSaved = await consulta.save(consultaData.id_consulta, consultaData.evolucion.descripcion);
         if(consultaData.alergias){
             // const alergiaSaved = 
@@ -81,7 +82,7 @@ exports.editar = async (req, res) => {
             id_consulta: ultimaConsulta.id_consulta,
             evolucion: ultimaConsulta.evolucion,
             motivo: ultimaConsulta.motivo,
-            fecha: formatearFechaYHora(ultimaConsulta.fecha),
+            fecha: ultimaConsulta.fecha,
             alergias: consulta_alergias,
             diagnosticos: diagnosticos,
             medicamentos: medicamentos,
@@ -190,7 +191,7 @@ exports.actualizar = async (req, res) => {
     // console.log("actualizaciones:",alergiasActualizadas, diagnosticosActualizados, medicamentosActualizados, habitosActualizados, antecedentesActualizados);
     // console.log("eliminaciones:",alergiasEliminadas, diagnosticosEliminados, medicamentosEliminados, habitosEliminados, antecedentesEliminados);
     // console.log("insersiones:",alergiasInsertadas, diagnosticosInsertados, medicamentosInsertados, habitosInsertados, antecedentesInsertados);
-    res.status(200).end();
+    res.redirect('/turnos');
 }
 exports.evolucion = async (req, res) => {
     const idConsulta = req.params.id;
@@ -232,11 +233,11 @@ const traerHistoriaClinica = async (dni_paciente) => {
     // console.log(consultasDelPaciente);
     for await (const element of consultasDelPaciente){
         console.log(element);
-        try {
-            element.fecha = formatearFechaYHora(element.fecha);
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     element.fecha = formatearFechaYHora(element.fecha);
+        // } catch (error) {
+        //     console.log(error);
+        // }
         hce.push({
             id_consulta: element.id_consulta,
             fecha_consulta: element.fecha,
@@ -261,15 +262,15 @@ exports.estadosDeDiagnosticos = async (req, res) => {
     res.json(await consulta.getEstadosDeDiagnosticos());
 }
 
-function formatearFechaYHora(fecha) {
-    const day = String(fecha.getDate()).padStart(2, '0');
-    const month = String(fecha.getMonth() + 1).padStart(2, '0');
-    const year = fecha.getFullYear();
-    const hour = String(fecha.getHours()).padStart(2, '0');
-    const minute = String(fecha.getMinutes()).padStart(2, '0');
-    const second = String(fecha.getSeconds()).padStart(2, '0');
-    return `${day}-${month}-${year} ${hour}:${minute}:${second}`;
-}
+// function formatearFechaYHora(fecha) {
+//     const day = String(fecha.getDate()).padStart(2, '0');
+//     const month = String(fecha.getMonth() + 1).padStart(2, '0');
+//     const year = fecha.getFullYear();
+//     const hour = String(fecha.getHours()).padStart(2, '0');
+//     const minute = String(fecha.getMinutes()).padStart(2, '0');
+//     const second = String(fecha.getSeconds()).padStart(2, '0');
+//     return `${day}-${month}-${year} ${hour}:${minute}:${second}`;
+// }
 // function formatearFecha(fecha) {
 //     const day = String(fecha.getDate()).padStart(2, '0');
 //     const month = String(fecha.getMonth() + 1).padStart(2, '0');

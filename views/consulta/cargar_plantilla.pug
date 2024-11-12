@@ -4,16 +4,18 @@ block head_adicional
 
 block content
     h2 title
-    label nombre de la plantilla
-    input#nombre(type="text")
-    label descripcion de la plantilla
-    textarea#descripcion
-    div.bg-light.text-dark
-        div#plantilla-nueva
-    button#guardar-plantilla.btn.btn-primary(type="button") Guardar
-    script(src="/javascripts/cargar_plantilla_script.js")
-    script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
-    script.
-        const quill = new Quill('#plantilla-nueva', {
-            theme: 'snow'
-        });
+    div.d-flex.flex-column.align-items-center
+        div.bg-secondary.d-flex.flex-column.align-items-center.p-4.w-75.rounded
+            label.form-label Nombre de la plantilla
+            input#nombre.w-75.m-2.form-control(type="text")
+            label.form-label Descripcion de la plantilla
+            textarea#descripcion.w-75.m-2.form-control
+            div.bg-light.text-dark.w-100.m-2
+                div#plantilla-nueva
+            button#guardar-plantilla.btn.btn-primary(type="button") Guardar
+        script(src="/javascripts/cargar_plantilla_script.js")
+        script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
+        script.
+            const quill = new Quill('#plantilla-nueva', {
+                theme: 'snow'
+            });

@@ -1,9 +1,9 @@
+const quill = new Quill('#evolucion-text', {
+    theme: 'snow'
+    });
 function cargarPlantilla(elemento){
     const plantilla = elemento.parentElement.querySelector('input[type="hidden"]').value;
-    const evolucionContainer = document.getElementById('evolucion-text');
-    const evolucionHTML = evolucionContainer.querySelector('div[contenteditable="true"]');
-    console.log(evolucionHTML, plantilla);
-    evolucionHTML.innerHTML = plantilla;
+    quill.root.innerHTML = plantilla;
 }
 
 function agregarAlergia() {
@@ -133,8 +133,22 @@ async function fetchEstadosDiagnosticos(){
     return estados_diagnosticos;
 }
 function finalizarConsulta(idConsulta) {
+    let hayDiagnosticosEnBlanco = false;
     const consulta = datosDeConsulta();
-    postConsulta(consulta);
+    consulta.diagnosticos.forEach(element => {
+        if(element.descripcion ===''){
+            hayDiagnosticosEnBlanco = true;
+    }});
+    if(consulta.diagnosticos.length == 0){ 
+        alert('Debe ingresar al menos un diagnostico');
+    }else if (hayDiagnosticosEnBlanco){
+        alert('No debe dejar diagnosticos en blanco');
+    }
+    else if(consulta.evolucion.descripcion == '<p><br></p>'){
+        alert('Debe ingresar una evolucion');  
+    }else{
+        postConsulta(consulta);
+    }
 }
 function guardarConsulta(idConsulta) {
     const consulta = datosDeConsulta();
@@ -172,16 +186,9 @@ function datosDeConsulta(){
     
     const evolucionContainer = document.getElementById('evolucion-text');
     // const evolucionHTML = evolucionContainer.querySelector('[class="ql-editor"]').children;
-    const evolucionHTML = '';
-    console.log(evolucionHTML);
-    let descEvolucion = '';
-    // evolucionHTML.forEach(element => {
-    //     descEvolucion += element.outerHTML;
-    // })
-    for (const element of evolucionHTML) {
-        descEvolucion += element.outerHTML;
-    }
-    const evolucion = {descripcion: descEvolucion }
+    const evolucionQuill = quill.root.innerHTML
+    console.log("-------------------",evolucionQuill,"--------------------");
+    const evolucion = {descripcion: evolucionQuill }
     const idConsulta = document.getElementById('id-consulta').value;
     console.log(evolucion);
     console.log(diagnosticos);
@@ -240,15 +247,15 @@ function recuperarTextArea(itemHTML) {
     return items;
 }
 
-async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antecedentes, habitos, medicamentos){
+async function postConsulta(consulta){
     const datos = {
-        id_consulta: idConsulta,
-        evolucion: evolucion,
-        diagnosticos: diagnosticos,
-        alergias: alergias,
-        antecedentes: antecedentes,
-        habitos: habitos,
-        medicamentos: medicamentos
+        id_consulta: consulta.idConsulta,
+        evolucion: consulta.evolucion,
+        diagnosticos: consulta.diagnosticos,
+        alergias: consulta.alergias,
+        antecedentes: consulta.antecedentes,
+        habitos: consulta.habitos,
+        medicamentos: consulta.medicamentos
     }
     const data = await fetch('/consultas/cargar',{
         method: 'POST',
