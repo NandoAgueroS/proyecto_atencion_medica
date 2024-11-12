@@ -1,3 +1,4 @@
+const idConsulta = document.getElementById('id-consulta').value;
 const quill = new Quill('#evolucion-text', {
     theme: 'snow'
     });
@@ -10,7 +11,7 @@ function cargarPlantilla(elemento){
 }
 fetchEvolucion();
 async function fetchEvolucion(){
-    const idConsulta = document.getElementById('id-consulta').value;
+    // const idConsulta = document.getElementById('id-consulta').value;
     const evolucion = await fetch('/consultas/evolucion/'+idConsulta);
     const evolucionJSON = await evolucion.json();
     quill.root.innerHTML = evolucionJSON.evolucion;
@@ -32,8 +33,12 @@ function agregarAlergia() {
     registrada.className = 'alergia-guardada d-flex flex-column';
     registrada.innerHTML = ` 
     <div class="d-flex flex-row justify-content-center">
-    <input disabled class="valor-alergia" id_alergia=${alergia.value} value="${alergia.options[alergia.selectedIndex].text}">
-    <input disabled class="valor-importancia" id_importancia=${importancia.value} value="${importancia.options[importancia.selectedIndex].text}">
+    <select disabled class="valor-alergia">
+    <option value=${alergia.value} disabled selected>${alergia.options[alergia.selectedIndex].text}</option>
+    </select>
+    <select disabled class="valor-importancia">
+    <option value=${importancia.value} disabled selected>${importancia.options[importancia.selectedIndex].text}</option>
+    </select>
     </div>
     <div class="d-flex flex-row justify-content-center">
     <input disabled type="date" class="fecha-desde" value=${fechaDesde.value}>
@@ -95,7 +100,7 @@ document.getElementById('nuevo_medicamento').addEventListener('click', function(
     nuevoMedicamentoDiv.innerHTML = nuevoMedicamento;
     medicamentos.append(nuevoMedicamentoDiv);
 })
-const itemsAEliminar = {
+let itemsAEliminar = {
     diagnosticos: [],
     medicamentos: [],
     antecedentes: [],
@@ -208,7 +213,6 @@ function datosDeConsulta(){
     
     const evolucionQuill = quill.root.innerHTML;
     const evolucion = {descripcion: evolucionQuill};
-    const idConsulta = document.getElementById('id-consulta').value;
     console.log(evolucion);
     console.log(diagnosticos);
     console.log(alergias)
@@ -225,8 +229,9 @@ function recuperarDiagnosticos(itemHTML) {
                 descripcion: element.querySelector('textarea').value,
                 id_estado: element.querySelector('input[type="radio"]:checked').value,
                 id: element.querySelector('textarea').getAttribute('id_item')
+                // id_consulta: idConsulta
             }
-)});
+        )});
     return items;
 }
 function recuperarAlergias (itemHTML) {
@@ -234,11 +239,12 @@ function recuperarAlergias (itemHTML) {
     itemHTML.forEach(element => {
         items.push(
             {
-                id_alergia: element.querySelector('.valor-alergia').getAttribute('id_alergia'),
-                id_importancia: element.querySelector('.valor-importancia').getAttribute('id_importancia'),
+                id_alergia: element.querySelector('.valor-alergia').value,
+                id_importancia: element.querySelector('.valor-importancia').value,
                 fecha_desde: element.querySelector('.fecha-desde').value || '',
                 fecha_hasta: element.querySelector('.fecha-hasta').value || '',
                 id: element.querySelector('.valor-alergia').getAttribute('id_item')
+                // id_consulta: idConsulta
             }
         )});
     return items;
@@ -252,6 +258,7 @@ function recuperarTextAreaFechas(itemHTML) {
                 fecha_desde: element.querySelector('input.fecha-desde').value || '',
                 fecha_hasta: element.querySelector('input.fecha-hasta').value || '',
                 id: element.querySelector('textarea').getAttribute('id_item')
+                // id_consulta: idConsulta
             }
         )
     });
@@ -263,7 +270,8 @@ function recuperarTextArea(itemHTML) {
         items.push(
             {
                 descripcion: element.querySelector('textarea').value || '',
-                id: element.querySelector('textarea').getAttribute('id_item'),
+                id: element.querySelector('textarea').getAttribute('id_item')
+                // id_consulta: idConsulta
             }
         )
     });
@@ -280,20 +288,27 @@ async function postConsulta(idConsulta, evolucion, diagnosticos, alergias, antec
         habitos: habitos,
         medicamentos: medicamentos
     }
-    const data = await fetch('/consultas/cargar',{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datos)
-    })
-    const matricula = localStorage.getItem('matricula');
-    if (data.redirected){
-        window.location.href = data.url+'?matricula='+matricula;
-    }
+    // const data = await fetch('/consultas/cargar',{
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(datos)
+    // })
+    // const matricula = localStorage.getItem('matricula');
+    // if (data.redirected){
+    //     window.location.href = data.url+'?matricula='+matricula;
+    // }
 }
 function filtrarNuevosItems(items){
-    return items.filter(item => item.id == null);
+    const filtrados = items.filter(item => item.id == null);
+    const conIdConsulta =  filtrados.map(item => {
+        let objeto = {...item, id_consulta: idConsulta};
+        delete objeto.id;
+        return objeto;
+    });
+    console.log(conIdConsulta);
+    return conIdConsulta;
 }
 function filtrarViejosItems(items){
     return items.filter(item => item.id != null);
@@ -321,6 +336,7 @@ async function updateConsulta(consulta){
         insertar: insertar,
         eliminar: itemsAEliminar
     }
+    console.log(datos);
     const data = await fetch('/consultas/actualizar',{
         method: 'POST',
         headers: {
@@ -332,7 +348,13 @@ async function updateConsulta(consulta){
     if (data.redirected){
         window.location.href = data.url+'?matricula='+matricula;
     }
-    if (data.status == 200) {
-        itemsAEliminar = [];
-    }
+    // if (data.status == 200) {
+        itemsAEliminar = {
+            diagnosticos: [],
+            medicamentos: [],
+            antecedentes: [],
+            alergias: [],
+            habitos: []
+        };
+    // }
 }

@@ -23,7 +23,7 @@ block content
             div#evolucion-text
         hr
         div#diagnosticos
-            - nroDiagnostico = 0
+            - nroDiagnostico1 = 100
             label.form-label Diagnosticos
             div#diagnosticos-container
                 each diagnostico in consulta.diagnosticos
@@ -31,14 +31,14 @@ block content
                         textarea.form-control(id_item=diagnostico.id_diagnostico)
                             = diagnostico.descripcion
                         div#estados-diagnosticos.form-check
+                            - nroDiagnostico1 = nroDiagnostico1 + 1
                             each estado in adicional.estados_de_diagnosticos
-                                - nroDiagnostico++
                                 div
                                     label.form-check-label(for="estado-diagnostico") #{estado.descripcion}
                                     if (estado.id_estado === diagnostico.id_estado_fk)
-                                        input.form-check-input(type="radio" id_diagnostico= diagnostico.id_diagnostico name=`estado-diagnostico-${nroDiagnostico}` id_estado=estado.id_estado checked)
+                                        input.form-check-input(type="radio" id_diagnostico= diagnostico.id_diagnostico name=`estado-diagnostico-radio${nroDiagnostico1}` value=estado.id_estado id_estado=estado.id_estado checked)
                                     else
-                                        input.form-check-input(type="radio" name=`estado-diagnostico-${nroDiagnostico}` id_estado=estado.id_estado)
+                                        input.form-check-input(type="radio" name=`estado-diagnostico-radio${nroDiagnostico1}` value=estado.id_estado id_estado=estado.id_estado)
                         button#remover_antecedente.btn.btn-danger.h-25.m-3(type="button" onclick=`removerItem(this,"diagnosticos",${diagnostico.id_diagnostico})`) -
             button#agregar-diagnostico.btn.btn-primary(type="button") +
         hr
@@ -68,21 +68,21 @@ block content
                 each alergia1 in consulta.alergias
                     div.alergia-guardada.d-flex.flex-column.align-items-center
                         div.d-flex.flex-row.justify-content-center
-                            select.form-select.w-auto(id=`alergia-${alergia1.id_alergia}`)
+                            select.valor-alergia.form-select.w-auto(id=`alergia-${alergia1.id_alergia}` id_item=alergia1.id_consulta_alergia)
                                 option(value="" disabled selected) Seleccione una Alergia
                                 each alergia in adicional.alergias
                                     if(alergia1.id_alergia === alergia.id_alergia)
-                                        option.valor-alergia(value=alergia.id_alergia selected id_item=alergia1.id_consulta_alergia id_alergia=alergia1.id_alergia) #{alergia.nomenclatura}
+                                        option(value=alergia.id_alergia selected id_item=alergia1.id_consulta_alergia id_alergia=alergia1.id_alergia) #{alergia.nomenclatura}
                                     else
-                                        option(value=alergia.id_alergia) #{alergia.nomenclatura}
+                                        option(value=alergia.id_alergia id_alergia=alergia.id_alergia) #{alergia.nomenclatura}
                                     
-                            select.form-select.w-auto.mt-2(id=`importancia-${alergia1.id_alergia}`)
+                            select.valor-importancia.form-select.w-auto.mt-2(id=`importancia-${alergia1.id_alergia}`)
                                 option(value="" disabled selected) Seleccione una Importancia
                                 each importancia in adicional.importancias_de_alergias
                                     if(alergia1.id_importancia === importancia.id_importancia)
-                                        option.valor-importancia(value=importancia.id_importancia id_importancia=alergia1.id_importancia selected) #{importancia.descripcion}
+                                        option(value=importancia.id_importancia id_importancia=alergia1.id_importancia selected) #{importancia.descripcion}
                                     else
-                                        option(value=importancia.id_importancia) #{importancia.descripcion}
+                                        option(value=importancia.id_importancia id_importancia=importancia.id_importancia) #{importancia.descripcion}
                         div.d-flex
                             div.d-flex.flex-column.align-items-center
                                 label.form-label inicio

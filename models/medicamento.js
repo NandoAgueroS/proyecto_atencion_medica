@@ -15,7 +15,7 @@ module.exports = {
     saveMultiple: async (medicamentos) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('INSERT INTO medicamentos (descripcion, id_consulta_fk) VALUES ?', medicamentos);
+            const [result] = await connection.execute('INSERT INTO medicamentos (descripcion, id_consulta_fk) VALUES (?, ?)', medicamentos);
             connection.end();
             if (result.affectedRows = medicamentos.length) {
                 return true;
@@ -45,7 +45,7 @@ module.exports = {
     delete: async (ids_medicamento) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('DELETE FROM medicamentos WHERE id_medicamento IN (?)', ids_medicamento);
+            const [result] = await connection.execute('DELETE FROM medicamentos WHERE id_medicamento = ?', [ids_medicamento]);
             connection.end();
             if (result.affectedRows = ids_medicamento.length) {
                 return true;

@@ -176,5 +176,20 @@ module.exports = {
             console.log(error);
             return false;
         }
+    },
+    update: async (id_consulta, evolucion) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('UPDATE consultas SET evolucion = ? WHERE id_consulta = ?', [evolucion, id_consulta]);
+            connection.end();
+            if (result.affectedRows = 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 }

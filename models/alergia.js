@@ -31,7 +31,7 @@ module.exports = {
     saveMultiple: async (alergias) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('INSERT INTO consultas_alergias (id_alergia_fk, id_consulta_fk, id_importancia_fk, fecha_desde, fecha_hasta) VALUES ?',
+            const [result] = await connection.execute('INSERT INTO consultas_alergias (id_alergia_fk, id_importancia_fk, fecha_desde, fecha_hasta, id_consulta_fk) VALUES ?',
                 alergias);
             connection.end();
             if (result.affectedRows = alergias.length) {
@@ -74,7 +74,7 @@ module.exports = {
     delete: async (ids_consulta_alergia) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('DELETE FROM consultas_alergias WHERE id_consulta_alergia IN (?)', ids_consulta_alergia);
+            const [result] = await connection.execute('DELETE FROM consultas_alergias WHERE id_consulta_alergia = ?', [ids_consulta_alergia]);
             connection.end();
             if (result.affectedRows === ids_consulta_alergia.length) {
                 return true;

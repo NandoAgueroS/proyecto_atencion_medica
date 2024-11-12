@@ -46,7 +46,7 @@ module.exports = {
     delete: async (ids_habito) => {
         try {
             const connection = await mysql.createConnection(datosConexion);
-            const [result] = await connection.execute('DELETE FROM habitos WHERE id_habito IN (?)', ids_habito);
+            const [result] = await connection.execute('DELETE FROM habitos WHERE id_habito = ?', [ids_habito]);
             connection.end();
             if (result.affectedRows = ids_habito.length) {
                 return true;
