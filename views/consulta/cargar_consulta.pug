@@ -12,17 +12,21 @@ block content
             a.btn.btn-warning(href=`/consultas/hce?dni_paciente=${dni_paciente}`) Ver HCE
         div.border.w-75.p-4.bg-secondary.rounded-1
             form(action="")
+            p.d-inline-flex.gap-1
+                a.btn.btn-info.m-1(data-bs-toggle="collapse" href="#collapsePlantillas" role="button" aria-expanded="false" aria-controls="collapsePlantillas") Usar plantillas de evolucion
             div#evolucion.bg-light.h-25.text-dark
-                ul
+                div.row.collapse#collapsePlantillas
                     each plantilla in medico.plantillas
-                        li
-                            button(type="button" onclick="cargarPlantilla(this)")
-                                =plantilla.nombre
-                            p
-                                =plantilla.descripcion
-                            input(type="hidden" value=plantilla.plantilla)
-                //label.form-label Evolución
-                //textarea#evolucion-text.form-control.form-control-lg
+                        div.col.m-3
+                            div.card
+                                div.card-body.rounded
+                                    h5.card-title
+                                        =plantilla.nombre
+                                    p.card-text
+                                        =plantilla.descripcion
+                                    
+                                    button.btn.btn-primary(type="button" onclick="cargarPlantilla(this)") Usar
+                                    input(type="hidden" value=plantilla.plantilla)
                 div#evolucion-text
             hr
             div#diagnosticos
@@ -80,7 +84,8 @@ block content
                         div#medicamentos-container
                             label.form-label Medicamentos
                         button#nuevo_medicamento.btn.btn-primary(type="button") +
-            button.btn.btn-primary(onclick=`finalizarConsulta(${iniciador.id_consulta})`) finalizar
+                div#alertas
+                button.btn.btn-primary(onclick=`finalizarConsulta(${iniciador.id_consulta})`) finalizar
     script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
     script(src="../../javascripts/script.js")
     include estructura_hce

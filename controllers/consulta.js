@@ -210,17 +210,18 @@ exports.historiaClinica = async (req, res) => {
     console.log(await hce);
     // res.json(hce);
     res.render('consulta/hce',
-         {
+        {
             dni_paciente: dni,
             consultas: hce, 
             medico: {
                 dni: req.session.dni, 
                 plantillas: await plantilla.findByMedico(req.session.dni)},
-            adicional:{
-                alergias: alergias,
-                estados_de_diagnosticos: estadosDeDiagonosticos,
-                importancias_de_alergias: importanciasDeAlergias,
-            }
+                adicional:{
+                    alergias: alergias,
+                    estados_de_diagnosticos: estadosDeDiagonosticos,
+                    importancias_de_alergias: importanciasDeAlergias,
+                },
+            existeConsultaPropia: await consulta.medicoPacienteExists(req.query.dni_paciente, req.session.dni)
             });
     }
 const traerHistoriaClinica = async (dni_paciente) => {

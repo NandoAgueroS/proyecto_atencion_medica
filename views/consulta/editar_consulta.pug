@@ -131,7 +131,9 @@ block content
                                 = medicamento.descripcion
                             button.btn.btn-danger.h-25.m-3(onclick=`removerItem(this, "medicamentos", ${medicamento.id_medicamento})` type="button") -
                 button#nuevo_medicamento.btn.btn-primary(type="button") +
-        button.btn.btn-primary(onclick=`guardarConsulta()`) finalizar
+            div.w-100.d-flex.flex-column.align-items-center
+                div#alertas
+                button.btn.btn-primary(onclick=`guardarConsulta()`) Guardar
         script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
         script(src="/javascripts/editar_consulta_script.js")
         script.

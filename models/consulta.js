@@ -191,5 +191,27 @@ module.exports = {
             console.log(error);
             return false;
         }
+    },
+    medicoPacienteExists: async (dni_paciente, dni_medico) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute(`
+                SELECT c.*
+                FROM consultas c
+                JOIN turnos t ON c.id_turno_fk = t.id_turno
+                JOIN agendas a ON a.id_agenda = t.id_agenda_fk
+                JOIN medicos_especialidades me ON me.matricula = a.matricula_fk
+                WHERE c.dni_paciente_fk = ? AND me.dni_medico_fk = ?`, 
+                [dni_paciente, dni_medico]);
+            connection.end();
+            if (result.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 }

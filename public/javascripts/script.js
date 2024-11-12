@@ -104,6 +104,7 @@ document.getElementById('agregar-diagnostico').addEventListener('click', agregar
     console.log(estadosDiagnosticos);
     estadosDiagnosticos.forEach(element => {
         const input = document.createElement('input');
+        if(element.id_estado === 1) input.checked = true;
         input.setAttribute('type', 'radio');
         input.setAttribute('id', element.id_estado+""+numeroDiagnostico)
         input.setAttribute('value', element.id_estado)
@@ -132,23 +133,35 @@ async function fetchEstadosDiagnosticos(){
     const estados_diagnosticos = await data.json();
     return estados_diagnosticos;
 }
+const alertas = document.getElementById('alertas');
 function finalizarConsulta(idConsulta) {
     let hayDiagnosticosEnBlanco = false;
     const consulta = datosDeConsulta();
+    let errores = ""
     consulta.diagnosticos.forEach(element => {
         if(element.descripcion ===''){
             hayDiagnosticosEnBlanco = true;
     }});
     if(consulta.diagnosticos.length == 0){ 
-        alert('Debe ingresar al menos un diagnostico');
+        errores += `
+        <div class="alert alert-danger" role="alert">
+        Debe ingresar al menos un diagnostico!
+        </div>`
     }else if (hayDiagnosticosEnBlanco){
-        alert('No debe dejar diagnosticos en blanco');
+        errores += `
+        <div class="alert alert-danger" role="alert">
+        No debe dejar diagnosticos en blanco!
+        </div>`
     }
     else if(consulta.evolucion.descripcion == '<p><br></p>'){
-        alert('Debe ingresar una evolucion');  
+        errores += `
+        <div class="alert alert-danger" role="alert">
+        Debe ingresar una evolucion!
+        </div>`
     }else{
         postConsulta(consulta);
     }
+    alertas.innerHTML = errores;
 }
 function guardarConsulta(idConsulta) {
     const consulta = datosDeConsulta();
