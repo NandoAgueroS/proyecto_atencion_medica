@@ -6,8 +6,8 @@ block head_adicional
     link(href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet")
 block content
     div.d-flex.flex-column.align-items-center
-        h2 Consulta #{iniciador.id_consulta}
-        input#id-consulta(value=iniciador.id_consulta)
+        h2 Consulta
+        input#id-consulta(type="hidden" value=iniciador.id_consulta)
         div
             a.btn.btn-warning(href=`/consultas/hce?dni_paciente=${dni_paciente}`) Ver HCE
         div.border.w-75.p-4.bg-secondary.rounded-1

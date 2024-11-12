@@ -14,7 +14,7 @@ const alergiasRouter = require('./routes/alergias');
 const loginRouter = require('./routes/login');
 const plantillasRouter = require('./routes/plantillas');
 const autenticacion = require('./middlewares/autenticacion')
-
+const pacientesRouter = require('./routes/pacientes');
 var app = express();
 
 // view engine setup
@@ -46,6 +46,7 @@ app.use('/consultas', autenticacion.isAuthenticated, consultasRouter);
 app.use('/turnos', autenticacion.isAuthenticated, turnosRouter);
 app.use('/alergias',autenticacion.isAuthenticated, alergiasRouter);
 app.use('/plantillas', autenticacion.isAuthenticated, plantillasRouter);
+app.use('/pacientes', autenticacion.isAuthenticated, pacientesRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -1,0 +1,36 @@
+extends ../layout
+block head_adicional
+    link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css")
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
+block content
+    div.w-100.d-flex.flex-column.align-items-center
+        h2.m-5
+            =title
+        div.bg-secondary.w-75.rounded-5.p-5
+            table#myTable
+                thead
+                    tr
+                        th Nombre
+                        th Apellido
+                        th Direccion
+                        th Telefono
+                        th Accion
+                tbody
+                    each paciente in pacientes
+                        tr
+                            td
+                                =paciente.nombre
+                            td
+                                =paciente.apellido
+                            td
+                                =paciente.direccion
+                            td
+                                =paciente.telefono
+                            td
+                                a(href=`/consultas/hce/?dni_paciente=${paciente.dni}` class="btn btn-secondary btn-sm") Ver HCE
+    script.
+            let table = new DataTable('#myTable')
+            const selectTable = document.getElementById("dt-length-0")
+            console.log(selectTable)
+            selectTable.classList.add('bg-secondary')

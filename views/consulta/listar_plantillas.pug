@@ -1,0 +1,16 @@
+extends ../layout
+block content
+    title
+        = title
+    div.d-flex.flex-column.align-items-center.w-100
+        div.row
+            each plantilla in plantillas
+                div.col.m-3
+                    div.card
+                        div.card-body.rounded
+                            h5.card-title
+                                = plantilla.nombre
+                            p.card-text
+                                = plantilla.descripcion
+                            
+                            a.btn.btn-danger(type="button" href=`plantillas/eliminar/${plantilla.id_plantilla}`) Eliminar

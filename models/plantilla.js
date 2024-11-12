@@ -25,5 +25,19 @@ module.exports = {
             console.log(error);
             return false;
         }
-    }
-}
+    },
+    delete: async (id) => {
+        try {
+            const connection = await mysql.createConnection(datosConexion);
+            const [result] = await connection.execute('DELETE FROM plantillas WHERE id_plantilla = ?', [id]);
+            connection.end();
+            if (result.affectedRows === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+}}

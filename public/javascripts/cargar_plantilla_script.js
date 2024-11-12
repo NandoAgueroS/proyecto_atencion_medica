@@ -20,4 +20,7 @@ document.getElementById('guardar-plantilla').addEventListener("click", async() =
         },
         body: JSON.stringify(plantilla)
     })
+    if (data.redirected) {
+        window.location.href = data.url;
+    }
 })
