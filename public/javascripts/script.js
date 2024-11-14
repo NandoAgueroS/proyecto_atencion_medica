@@ -29,7 +29,7 @@ function agregarAlergia() {
     <div class="d-flex flex-row justify-content-center">
     <input disabled type="date" class="fecha-desde" value=${fechaDesde.value}>
     <input disabled type="date" class="fecha-hasta" value=${fechaHasta.value}>
-    <button onclick="removerItem(this)" class="btn btn-danger w-5 m-1" type="button">-</button>
+    <button onclick="removerItem(this.parentElement)" class="btn btn-danger w-5 m-1" type="button">-</button>
     </div>
     <hr>
     `
